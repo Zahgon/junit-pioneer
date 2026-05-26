@@ -7,11 +7,9 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.resource;
 
 import static java.util.Objects.requireNonNull;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,38 +42,31 @@ import java.util.List;
 @SuppressWarnings("try")
 public final class TemporaryDirectory implements ResourceFactory<Path> {
 
-	@Override
-	public Resource<Path> create(List<String> arguments) throws Exception {
-		if (arguments.size() >= 2) {
-			throw new IllegalArgumentException("Expected 0 or 1 arguments, but got " + arguments.size());
-		}
-		String directoryPrefix = (arguments.size() == 1) ? arguments.get(0) : "";
-		requireNonNull(directoryPrefix, "Argument 0 can't be null");
-		return new TemporaryDirectoryResource(Files.createTempDirectory(directoryPrefix));
-	}
+    @Override
+    public Resource<Path> create(List<String> arguments) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static final class TemporaryDirectoryResource implements Resource<Path> {
+    private static final class TemporaryDirectoryResource implements Resource<Path> {
 
-		private final Path tempDir;
+        private final Path tempDir;
 
-		TemporaryDirectoryResource(Path tempDir) {
-			this.tempDir = tempDir;
-		}
+        TemporaryDirectoryResource(Path tempDir) {
+            this.tempDir = tempDir;
+        }
 
-		@Override
-		public Path get() {
-			return tempDir;
-		}
+        @Override
+        public Path get() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		@Override
-		public void close() throws Exception {
-			deleteRecursively(tempDir);
-		}
+        @Override
+        public void close() throws Exception {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		private static void deleteRecursively(Path tempDir) throws IOException {
-			Files.walkFileTree(tempDir, PathDeleter.INSTANCE);
-		}
-
-	}
-
+        private static void deleteRecursively(Path tempDir) throws IOException {
+            Files.walkFileTree(tempDir, PathDeleter.INSTANCE);
+        }
+    }
 }

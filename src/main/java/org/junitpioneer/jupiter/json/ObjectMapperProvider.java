@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -23,29 +22,11 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
  */
 public interface ObjectMapperProvider {
 
-	ObjectMapper get();
+    ObjectMapper get();
 
-	default ObjectMapper getLenient() {
-		var mapper = get();
-		if (mapper instanceof JsonMapper) {
-			return ((JsonMapper) mapper)
-					.rebuild()
-					.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
-					.enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
-					.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
-					.enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
-					.build();
-		}
-		return get()
-				.copyWith(JsonFactory
-						.builder()
-						.enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
-						.enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
-						.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
-						.enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
-						.build());
-	}
+    default ObjectMapper getLenient() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	String id();
-
+    String id();
 }

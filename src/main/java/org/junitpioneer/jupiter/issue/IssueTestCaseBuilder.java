@@ -7,48 +7,44 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.issue;
 
 import java.util.Optional;
-
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junitpioneer.jupiter.IssueTestCase;
 
 class IssueTestCaseBuilder {
 
-	private final String testId;
+    private final String testId;
 
-	// all of these can be null
-	private String issueId;
-	private Status result;
-	private Long elapsedTime;
+    // all of these can be null
+    private String issueId;
 
-	public IssueTestCaseBuilder(String testId) {
-		this.testId = testId;
-	}
+    private Status result;
 
-	public IssueTestCaseBuilder setResult(Status result) {
-		this.result = result;
-		return this;
-	}
+    private Long elapsedTime;
 
-	public IssueTestCaseBuilder setElapsedTime(long elapsedTime) {
-		this.elapsedTime = elapsedTime;
-		return this;
-	}
+    public IssueTestCaseBuilder(String testId) {
+        this.testId = testId;
+    }
 
-	public String getIssueId() {
-		return issueId;
-	}
+    public IssueTestCaseBuilder setResult(Status result) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public IssueTestCaseBuilder setIssueId(String issueId) {
-		this.issueId = issueId;
-		return this;
-	}
+    public IssueTestCaseBuilder setElapsedTime(long elapsedTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public IssueTestCase build() {
-		return new IssueTestCase(testId, result, Optional.ofNullable(elapsedTime));
-	}
+    public String getIssueId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    public IssueTestCaseBuilder setIssueId(String issueId) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IssueTestCase build() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

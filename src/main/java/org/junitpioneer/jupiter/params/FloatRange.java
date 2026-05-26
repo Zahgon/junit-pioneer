@@ -7,18 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 class FloatRange extends Range<Float> {
 
-	public FloatRange(FloatRangeSource source) {
-		super(source.from(), source.to(), source.step(), source.closed(), 0.0F);
-	}
+    public FloatRange(FloatRangeSource source) {
+        super(source.from(), source.to(), source.step(), source.closed(), 0.0F);
+    }
 
-	@Override
-	public Float nextValue() {
-		return getCurrent() + getStep();
-	}
-
+    @Override
+    public Float nextValue() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

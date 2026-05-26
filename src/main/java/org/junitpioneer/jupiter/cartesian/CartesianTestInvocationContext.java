@@ -7,33 +7,31 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.cartesian;
 
 import java.util.List;
-
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junitpioneer.internal.TestNameFormatter;
 
 class CartesianTestInvocationContext implements TestTemplateInvocationContext {
 
-	private final List<?> parameters;
-	private final TestNameFormatter formatter;
+    private final List<?> parameters;
 
-	CartesianTestInvocationContext(List<?> parameters, TestNameFormatter formatter) {
-		this.parameters = parameters;
-		this.formatter = formatter;
-	}
+    private final TestNameFormatter formatter;
 
-	@Override
-	public String getDisplayName(int invocationIndex) {
-		return formatter.format(invocationIndex, parameters.toArray());
-	}
+    CartesianTestInvocationContext(List<?> parameters, TestNameFormatter formatter) {
+        this.parameters = parameters;
+        this.formatter = formatter;
+    }
 
-	@Override
-	public List<Extension> getAdditionalExtensions() {
-		return List.of(new CartesianProductResolver(parameters));
-	}
+    @Override
+    public String getDisplayName(int invocationIndex) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public List<Extension> getAdditionalExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

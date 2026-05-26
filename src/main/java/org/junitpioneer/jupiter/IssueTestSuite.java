@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import java.util.List;
@@ -24,56 +23,51 @@ import java.util.Objects;
  */
 public final class IssueTestSuite {
 
-	private final String issueId;
-	private final List<IssueTestCase> tests;
+    private final String issueId;
 
-	/**
-	 * Constructor with all attributes.
-	 *
-	 * @param issueId Value of the {@link org.junitpioneer.jupiter.Issue} annotation
-	 * @param tests List of all tests, annotated with the issueId
-	 */
-	public IssueTestSuite(String issueId, List<IssueTestCase> tests) {
-		this.issueId = issueId;
-		this.tests = List.copyOf(tests);
-	}
+    private final List<IssueTestCase> tests;
 
-	/**
-	 * Returns the value of the {@link org.junitpioneer.jupiter.Issue} annotation.
-	 *
-	 * @return IssueId the test belongs to
-	 */
-	public String issueId() {
-		return issueId;
-	}
+    /**
+     * Constructor with all attributes.
+     *
+     * @param issueId Value of the {@link org.junitpioneer.jupiter.Issue} annotation
+     * @param tests List of all tests, annotated with the issueId
+     */
+    public IssueTestSuite(String issueId, List<IssueTestCase> tests) {
+        this.issueId = issueId;
+        this.tests = List.copyOf(tests);
+    }
 
-	/**
-	 * Retrieves a list with all test cases related to this issue.
-	 *
-	 * @return List of all test cases related to this issue
-	 */
-	public List<IssueTestCase> tests() {
-		return tests;
-	}
+    /**
+     * Returns the value of the {@link org.junitpioneer.jupiter.Issue} annotation.
+     *
+     * @return IssueId the test belongs to
+     */
+    public String issueId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof IssueTestSuite))
-			return false;
-		IssueTestSuite that = (IssueTestSuite) o;
-		return issueId.equals(that.issueId) && tests.equals(that.tests);
-	}
+    /**
+     * Retrieves a list with all test cases related to this issue.
+     *
+     * @return List of all test cases related to this issue
+     */
+    public List<IssueTestCase> tests() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(issueId);
-	}
+    @Override
+    public boolean equals(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String toString() {
-		return "IssueTestSuite{" + "issueId='" + issueId + '\'' + ", tests=" + tests + '}';
-	}
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

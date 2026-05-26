@@ -7,18 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 class LongRange extends Range<Long> {
 
-	public LongRange(LongRangeSource source) {
-		super(source.from(), source.to(), source.step(), source.closed(), 0L);
-	}
+    public LongRange(LongRangeSource source) {
+        super(source.from(), source.to(), source.step(), source.closed(), 0L);
+    }
 
-	@Override
-	public Long nextValue() {
-		return getCurrent() + getStep();
-	}
-
+    @Override
+    public Long nextValue() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

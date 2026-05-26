@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 import java.util.Iterator;
@@ -19,98 +18,76 @@ import java.util.NoSuchElementException;
  */
 abstract class Range<N extends Number & Comparable<N>> implements Iterator<N> {
 
-	private final N from;
-	private final N to;
-	private final N step;
-	private final boolean closed;
-	private N current;
-	private final int sign;
-	private final N zero;
+    private final N from;
 
-	Range(N from, N to, N step, boolean closed, N zero) {
-		this.from = from;
-		this.to = to;
-		this.step = step;
-		this.closed = closed;
-		this.zero = zero;
-		current = null;
-		sign = step.compareTo(getZero());
-	}
+    private final N to;
 
-	/**
-	 * Asserts the range is valid.
-	 * @throws IllegalArgumentException if the range is not valid
-	 */
-	void validate() {
-		if (step.equals(getZero())) {
-			throw new IllegalArgumentException("Illegal range. The step cannot be zero.");
-		}
+    private final N step;
 
-		if (!closed && from.equals(to)) {
-			throw new IllegalArgumentException("Illegal range. Equal from and to will produce an empty range.");
-		}
+    private final boolean closed;
 
-		boolean fromNotEqualsTo = (from.compareTo(to) != 0);
+    private N current;
 
-		if ((isValidDescending()) && (!closed || fromNotEqualsTo)) {
-			String message = String
-					.format("Illegal range. There's no way to get from %s to %s with a step of %s.", from, to, step);
-			throw new IllegalArgumentException(message);
-		}
-	}
+    private final int sign;
 
-	boolean isValidDescending() {
-		boolean fromIsLessThanTo = (from.compareTo(to) < 0);
-		boolean stepIsLessThanZero = (sign < 0);
+    private final N zero;
 
-		return fromIsLessThanTo == stepIsLessThanZero;
-	}
+    Range(N from, N to, N step, boolean closed, N zero) {
+        this.from = from;
+        this.to = to;
+        this.step = step;
+        this.closed = closed;
+        this.zero = zero;
+        current = null;
+        sign = step.compareTo(getZero());
+    }
 
-	N getStep() {
-		return step;
-	}
+    /**
+     * Asserts the range is valid.
+     * @throws IllegalArgumentException if the range is not valid
+     */
+    void validate() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	N getCurrent() {
-		return current;
-	}
+    boolean isValidDescending() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * The next value in the range. Calling {@link #next()} will return this value and advance the iterator to it.
-	 */
-	abstract N nextValue();
+    N getStep() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private N getNextValue() {
-		if (current == null) {
-			return from;
-		}
-		return nextValue();
-	}
+    N getCurrent() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * The value of the no-op "zero", illegal step in terms of N
-	 */
-	private N getZero() {
-		return zero;
-	}
+    /**
+     * The next value in the range. Calling {@link #next()} will return this value and advance the iterator to it.
+     */
+    abstract N nextValue();
 
-	@Override
-	public boolean hasNext() {
-		if (current == null) {
-			return true;
-		}
-		N nextValue = getNextValue();
-		int cmp = nextValue.compareTo(to);
-		int overflowCheck = nextValue.compareTo(current);
-		return ((cmp < 0 != sign < 0) && (overflowCheck < 0 == sign < 0)) || (closed && cmp == 0);
-	}
+    private N getNextValue() {
+        if (current == null) {
+            return from;
+        }
+        return nextValue();
+    }
 
-	@Override
-	public N next() {
-		if (!hasNext()) {
-			throw new NoSuchElementException();
-		}
-		current = getNextValue();
-		return current;
-	}
+    /**
+     * The value of the no-op "zero", illegal step in terms of N
+     */
+    private N getZero() {
+        return zero;
+    }
 
+    @Override
+    public boolean hasNext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public N next() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

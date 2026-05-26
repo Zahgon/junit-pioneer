@@ -7,13 +7,11 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junitpioneer.internal.PioneerPreconditions;
 
@@ -22,20 +20,15 @@ import org.junitpioneer.internal.PioneerPreconditions;
  */
 class JsonInlineArgumentsProvider extends AbstractJsonArgumentsProvider<JsonSource> {
 
-	private List<String> jsonValues;
+    private List<String> jsonValues;
 
-	@Override
-	public void accept(JsonSource jsonSource) {
-		this.jsonValues = Arrays.asList(jsonSource.value());
-	}
+    @Override
+    public void accept(JsonSource jsonSource) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected Stream<Node> provideNodes(ExtensionContext context, JsonConverter jsonConverter) {
-		return PioneerPreconditions
-				.notEmpty(this.jsonValues, "value must not be empty")
-				.stream()
-				.map(value -> jsonConverter.toNode(value, true))
-				.flatMap(node -> node.isArray() ? node.elements() : Stream.of(node));
-	}
-
+    @Override
+    protected Stream<Node> provideNodes(ExtensionContext context, JsonConverter jsonConverter) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.resource;
 
 import java.util.List;
@@ -32,22 +31,21 @@ import java.util.List;
 @SuppressWarnings("try")
 public interface ResourceFactory<T> extends AutoCloseable {
 
-	/**
-	 * Returns a new resource.
-	 *
-	 * @param arguments a list of strings to be used to populate or configure the resource
-	 * @throws Exception if creating the resource failed
-	 */
-	Resource<T> create(List<String> arguments) throws Exception;
+    /**
+     * Returns a new resource.
+     *
+     * @param arguments a list of strings to be used to populate or configure the resource
+     * @throws Exception if creating the resource failed
+     */
+    Resource<T> create(List<String> arguments) throws Exception;
 
-	/**
-	 * Closes the resource factory.
-	 *
-	 * @throws Exception if closing the resource factory failed
-	 */
-	@Override
-	default void close() throws Exception {
-		// no op by default
-	}
-
+    /**
+     * Closes the resource factory.
+     *
+     * @throws Exception if closing the resource factory failed
+     */
+    @Override
+    default void close() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

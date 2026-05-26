@@ -7,29 +7,17 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 class JsonConverterProvider {
 
-	private static final boolean JACKSON_PRESENT = isJacksonObjectMapperClassPresent();
+    private static final boolean JACKSON_PRESENT = isJacksonObjectMapperClassPresent();
 
-	static boolean isJacksonObjectMapperClassPresent() {
-		try {
-			JsonConverterProvider.class.getClassLoader().loadClass("com.fasterxml.jackson.databind.ObjectMapper");
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	}
+    static boolean isJacksonObjectMapperClassPresent() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static JsonConverter getJsonConverter(String objectMapperId) {
-		if (JACKSON_PRESENT) {
-			return JacksonJsonConverter.getConverter(objectMapperId);
-		}
-
-		throw new NoJsonParserConfiguredException();
-	}
-
+    static JsonConverter getJsonConverter(String objectMapperId) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

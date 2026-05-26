@@ -7,18 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 class DoubleRange extends Range<Double> {
 
-	public DoubleRange(DoubleRangeSource source) {
-		super(source.from(), source.to(), source.step(), source.closed(), 0.0D);
-	}
+    public DoubleRange(DoubleRangeSource source) {
+        super(source.from(), source.to(), source.step(), source.closed(), 0.0D);
+    }
 
-	@Override
-	public Double nextValue() {
-		return getCurrent() + getStep();
-	}
-
+    @Override
+    public Double nextValue() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

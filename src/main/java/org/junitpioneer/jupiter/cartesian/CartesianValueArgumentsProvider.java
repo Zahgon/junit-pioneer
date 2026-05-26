@@ -7,18 +7,15 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.cartesian;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -28,46 +25,17 @@ import org.junit.platform.commons.PreconditionViolationException;
  * except it does NOT support {@code @ParameterizedTest} and implements {@link CartesianArgumentsProvider}
  * for use with {@code @CartesianTest}.
  */
-class CartesianValueArgumentsProvider
-		implements CartesianParameterArgumentsProvider<Object>, AnnotationConsumer<CartesianTest.Values> {
+class CartesianValueArgumentsProvider implements CartesianParameterArgumentsProvider<Object>, AnnotationConsumer<CartesianTest.Values> {
 
-	private Object[] arguments;
+    private Object[] arguments;
 
-	@Override
-	public void accept(CartesianTest.Values source) {
-		// @formatter:off
-		List<Object> arrays =
-				// Declaration of <Object> is necessary due to a bug in Eclipse Photon.
-				Stream.<Object> of(
-						source.shorts(),
-						source.bytes(),
-						source.ints(),
-						source.longs(),
-						source.floats(),
-						source.doubles(),
-						source.chars(),
-						source.booleans(),
-						source.strings(),
-						source.classes()
-				)
-				.filter(array -> Array.getLength(array) > 0)
-				.collect(toUnmodifiableList());
-		// @formatter:on
+    @Override
+    public void accept(CartesianTest.Values source) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		if (arrays.size() != 1)
-			throw new PreconditionViolationException("Exactly one type of input must be provided in the @"
-					+ CartesianTest.Values.class.getSimpleName() + " annotation, but there were " + arrays.size());
-
-		Object originalArray = arrays.get(0);
-		arguments = IntStream
-				.range(0, Array.getLength(originalArray)) //
-				.mapToObj(index -> Array.get(originalArray, index)) //
-				.toArray();
-	}
-
-	@Override
-	public Stream<Object> provideArguments(ExtensionContext context, Parameter parameter) {
-		return Arrays.stream(arguments);
-	}
-
+    @Override
+    public Stream<Object> provideArguments(ExtensionContext context, Parameter parameter) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

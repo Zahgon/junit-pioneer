@@ -7,58 +7,44 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junitpioneer.internal.PioneerPreconditions;
 
 abstract class AbstractJsonSourceBasedArgumentsProvider<A extends Annotation> extends AbstractJsonArgumentsProvider<A> {
 
-	// the reading of the resources / files is heavily inspired by Jupiter's CsvFileArgumentsProvider
+    // the reading of the resources / files is heavily inspired by Jupiter's CsvFileArgumentsProvider
+    private String dataLocation;
 
-	private String dataLocation;
-	private List<Source> sources;
+    private List<Source> sources;
 
-	protected void accept(List<Source> sources, String dataLocation) {
-		this.sources = sources;
-		this.dataLocation = dataLocation;
-	}
+    protected void accept(List<Source> sources, String dataLocation) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected Stream<Node> provideNodes(ExtensionContext context, JsonConverter jsonConverter) {
-		return PioneerPreconditions
-				.notEmpty(this.sources, "Value must not be empty")
-				.stream()
-				.map(source -> source.open(context))
-				.map(jsonConverter::toNode)
-				.flatMap(this::extractArgumentNodes);
-	}
+    @Override
+    protected Stream<Node> provideNodes(ExtensionContext context, JsonConverter jsonConverter) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private Stream<Node> extractArgumentNodes(Node node) {
-		// @formatter:off
-		Node nodeForExtraction = (dataLocation == null || dataLocation.isEmpty())
-				? node
-				: node.getNode(dataLocation)
-						.orElseThrow(() -> new PreconditionViolationException(
-							"Node " + node + " does not have data element at " + dataLocation));
-		// @formatter:on
-		if (nodeForExtraction.isArray()) {
-			return nodeForExtraction.elements();
-		}
-		return Stream.of(nodeForExtraction);
-	}
+    private Stream<Node> extractArgumentNodes(Node node) {
+        // @formatter:off
+        Node nodeForExtraction = (dataLocation == null || dataLocation.isEmpty()) ? node : node.getNode(dataLocation).orElseThrow(() -> new PreconditionViolationException("Node " + node + " does not have data element at " + dataLocation));
+        // @formatter:on
+        if (nodeForExtraction.isArray()) {
+            return nodeForExtraction.elements();
+        }
+        return Stream.of(nodeForExtraction);
+    }
 
-	interface Source {
+    interface Source {
 
-		InputStream open(ExtensionContext context);
-
-	}
-
+        InputStream open(ExtensionContext context);
+    }
 }

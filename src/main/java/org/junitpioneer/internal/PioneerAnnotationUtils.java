@@ -7,12 +7,10 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.internal;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toUnmodifiableList;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
@@ -26,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -49,252 +46,181 @@ import org.junitpioneer.jupiter.cartesian.CartesianArgumentsSource;
  * <p>All of the above mechanisms apply recursively, meaning that, e.g., for an annotation to be
  * <em>meta-present</em> it can present on an annotation that is present on another annotation
  * that is present on the element.</p>
- *
  */
 public class PioneerAnnotationUtils {
 
-	private PioneerAnnotationUtils() {
-		// private constructor to prevent instantiation of utility class
-	}
+    private PioneerAnnotationUtils() {
+        // private constructor to prevent instantiation of utility class
+    }
 
-	/**
-	 * Determines whether an annotation of the specified {@code annotationType} is either
-	 * <em>present</em>, <em>indirectly present</em>, <em>meta-present</em>, or
-	 * <em>enclosing-present</em> on the test element (method or class) belonging to the
-	 * specified {@code context}.
-	 */
-	public static boolean isAnnotationPresent(ExtensionContext context, Class<? extends Annotation> annotationType) {
-		return findClosestEnclosingAnnotation(context, annotationType).isPresent();
-	}
+    /**
+     * Determines whether an annotation of the specified {@code annotationType} is either
+     * <em>present</em>, <em>indirectly present</em>, <em>meta-present</em>, or
+     * <em>enclosing-present</em> on the test element (method or class) belonging to the
+     * specified {@code context}.
+     */
+    public static boolean isAnnotationPresent(ExtensionContext context, Class<? extends Annotation> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Determines whether an annotation of the specified repeatable {@code annotationType}
-	 * is either <em>present</em>, <em>indirectly present</em>, <em>meta-present</em>, or
-	 * <em>enclosing-present</em> on the test element (method or class) belonging to the specified
-	 * {@code context}.
-	 */
-	public static boolean isAnyRepeatableAnnotationPresent(ExtensionContext context,
-			Class<? extends Annotation> annotationType) {
-		return findClosestEnclosingRepeatableAnnotations(context, annotationType).iterator().hasNext();
-	}
+    /**
+     * Determines whether an annotation of the specified repeatable {@code annotationType}
+     * is either <em>present</em>, <em>indirectly present</em>, <em>meta-present</em>, or
+     * <em>enclosing-present</em> on the test element (method or class) belonging to the specified
+     * {@code context}.
+     */
+    public static boolean isAnyRepeatableAnnotationPresent(ExtensionContext context, Class<? extends Annotation> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the specified annotation if it is either <em>present</em>, <em>meta-present</em>,
-	 * <em>enclosing-present</em>, or <em>indirectly present</em> on the test element (method or class) belonging
-	 * to the specified {@code context}. If the annotations are present on more than one enclosing type,
-	 * the closest ones are returned.
-	 */
-	public static <A extends Annotation> Optional<A> findClosestEnclosingAnnotation(ExtensionContext context,
-			Class<A> annotationType) {
-		return findAnnotations(context, annotationType, false, false).findFirst();
-	}
+    /**
+     * Returns the specified annotation if it is either <em>present</em>, <em>meta-present</em>,
+     * <em>enclosing-present</em>, or <em>indirectly present</em> on the test element (method or class) belonging
+     * to the specified {@code context}. If the annotations are present on more than one enclosing type,
+     * the closest ones are returned.
+     */
+    public static <A extends Annotation> Optional<A> findClosestEnclosingAnnotation(ExtensionContext context, Class<A> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the specified repeatable annotations if they are either <em>present</em>,
-	 * <em>indirectly present</em>, <em>meta-present</em>, or <em>enclosing-present</em> on the test
-	 * element (method or class) belonging to the specified {@code context}. If the annotations are
-	 * present on more than one enclosing type, the instances on the closest one are returned.
-	 */
-	public static <A extends Annotation> Stream<A> findClosestEnclosingRepeatableAnnotations(ExtensionContext context,
-			Class<A> annotationType) {
-		return findAnnotations(context, annotationType, true, false);
-	}
+    /**
+     * Returns the specified repeatable annotations if they are either <em>present</em>,
+     * <em>indirectly present</em>, <em>meta-present</em>, or <em>enclosing-present</em> on the test
+     * element (method or class) belonging to the specified {@code context}. If the annotations are
+     * present on more than one enclosing type, the instances on the closest one are returned.
+     */
+    public static <A extends Annotation> Stream<A> findClosestEnclosingRepeatableAnnotations(ExtensionContext context, Class<A> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the specified annotations if they are either <em>present</em>, <em>indirectly present</em>,
-	 * <em>meta-present</em>, or <em>enclosing-present</em> on the test element (method or class) belonging
-	 * to the specified {@code context}. If the annotations are present on more than one enclosing type,
-	 * all instances are returned.
-	 */
-	public static <A extends Annotation> Stream<A> findAllEnclosingAnnotations(ExtensionContext context,
-			Class<A> annotationType) {
-		return findAnnotations(context, annotationType, false, true);
-	}
+    /**
+     * Returns the specified annotations if they are either <em>present</em>, <em>indirectly present</em>,
+     * <em>meta-present</em>, or <em>enclosing-present</em> on the test element (method or class) belonging
+     * to the specified {@code context}. If the annotations are present on more than one enclosing type,
+     * all instances are returned.
+     */
+    public static <A extends Annotation> Stream<A> findAllEnclosingAnnotations(ExtensionContext context, Class<A> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the specified repeatable annotations if they are either <em>present</em>,
-	 * <em>indirectly present</em>, <em>meta-present</em>, or <em>enclosing-present</em> on the test
-	 * element (method or class) belonging to the specified {@code context}. If the annotation is
-	 * present on more than one enclosing type, all instances are returned.
-	 */
-	public static <A extends Annotation> Stream<A> findAllEnclosingRepeatableAnnotations(ExtensionContext context,
-			Class<A> annotationType) {
-		return findAnnotations(context, annotationType, true, true);
-	}
+    /**
+     * Returns the specified repeatable annotations if they are either <em>present</em>,
+     * <em>indirectly present</em>, <em>meta-present</em>, or <em>enclosing-present</em> on the test
+     * element (method or class) belonging to the specified {@code context}. If the annotation is
+     * present on more than one enclosing type, all instances are returned.
+     */
+    public static <A extends Annotation> Stream<A> findAllEnclosingRepeatableAnnotations(ExtensionContext context, Class<A> annotationType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns the annotations <em>present</em> on the {@code AnnotatedElement}
-	 * that are themselves annotated with the specified annotation. The meta-annotation can be <em>present</em>,
-	 * <em>indirectly present</em>, or <em>meta-present</em>.
-	 */
-	public static <A extends Annotation> List<Annotation> findAnnotatedAnnotations(AnnotatedElement element,
-			Class<A> annotation) {
-		boolean isRepeatable = annotation.isAnnotationPresent(Repeatable.class);
-		return Arrays
-				.stream(element.getDeclaredAnnotations())
-				// flatten @Repeatable aggregator annotations
-				.flatMap(PioneerAnnotationUtils::flatten)
-				.filter(a -> !(findOnType(a.annotationType(), annotation, isRepeatable, false).isEmpty()))
-				.collect(toUnmodifiableList());
-	}
+    /**
+     * Returns the annotations <em>present</em> on the {@code AnnotatedElement}
+     * that are themselves annotated with the specified annotation. The meta-annotation can be <em>present</em>,
+     * <em>indirectly present</em>, or <em>meta-present</em>.
+     */
+    public static <A extends Annotation> List<Annotation> findAnnotatedAnnotations(AnnotatedElement element, Class<A> annotation) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static Stream<Annotation> flatten(Annotation annotation) {
-		try {
-			if (isContainerAnnotation(annotation)) {
-				Method value = annotation.annotationType().getDeclaredMethod("value");
-				Annotation[] invoke = (Annotation[]) value.invoke(annotation);
-				return Stream.of(invoke).flatMap(PioneerAnnotationUtils::flatten);
-			} else {
-				return Stream.of(annotation);
-			}
-		}
-		catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			throw new RuntimeException("Failed to flatten annotation stream.", e); //NOSONAR
-		}
-	}
+    private static Stream<Annotation> flatten(Annotation annotation) {
+        try {
+            if (isContainerAnnotation(annotation)) {
+                Method value = annotation.annotationType().getDeclaredMethod("value");
+                Annotation[] invoke = (Annotation[]) value.invoke(annotation);
+                return Stream.of(invoke).flatMap(PioneerAnnotationUtils::flatten);
+            } else {
+                return Stream.of(annotation);
+            }
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            //NOSONAR
+            throw new RuntimeException("Failed to flatten annotation stream.", e);
+        }
+    }
 
-	/**
-	 * Checks whether a given annotation is a container annotation.
-	 * Checks only the necessary parts, i.e.:
-	 * <ul>
-	 *     <li>the annotation has a 'value' method</li>
-	 *     <li>the 'value' method has annotation array as return type</li>
-	 *     <li>the return type annotation is annotated with {@link Repeatable}, referencing this annotation</li>
-	 * </ul>
-	 * Does not check (this would mean a compile-time error):
-	 * <ul>
-	 *     <li>{@link java.lang.annotation.Retention}</li>
-	 *     <li>{@link java.lang.annotation.Target}</li>
-	 *     <li>{@link java.lang.annotation.Documented}</li>
-	 *     <li>{@link Inherited}</li>
-	 * </ul>
-	 *
-	 * @param annotation the annotation to check
-	 * @return {@code true} if the given annotation is a container annotation, {@code false} otherwise
-	 * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3">Relevant section of the JLS</a>
-	 */
-	public static boolean isContainerAnnotation(Annotation annotation) {
-		try {
-			Method value = annotation.annotationType().getDeclaredMethod("value");
-			return value.getReturnType().isArray() && value.getReturnType().getComponentType().isAnnotation()
-					&& isContainerAnnotationOf(annotation, value.getReturnType().getComponentType());
-		}
-		catch (NoSuchMethodException e) {
-			return false;
-		}
-	}
+    /**
+     * Checks whether a given annotation is a container annotation.
+     * Checks only the necessary parts, i.e.:
+     * <ul>
+     *     <li>the annotation has a 'value' method</li>
+     *     <li>the 'value' method has annotation array as return type</li>
+     *     <li>the return type annotation is annotated with {@link Repeatable}, referencing this annotation</li>
+     * </ul>
+     * Does not check (this would mean a compile-time error):
+     * <ul>
+     *     <li>{@link java.lang.annotation.Retention}</li>
+     *     <li>{@link java.lang.annotation.Target}</li>
+     *     <li>{@link java.lang.annotation.Documented}</li>
+     *     <li>{@link Inherited}</li>
+     * </ul>
+     *
+     * @param annotation the annotation to check
+     * @return {@code true} if the given annotation is a container annotation, {@code false} otherwise
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3">Relevant section of the JLS</a>
+     */
+    public static boolean isContainerAnnotation(Annotation annotation) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static boolean isContainerAnnotationOf(Annotation potentialContainer, Class<?> potentialRepeatable) {
-		Repeatable repeatable = potentialRepeatable.getAnnotation(Repeatable.class);
-		return repeatable != null && repeatable.value().equals(potentialContainer.annotationType());
-	}
+    private static boolean isContainerAnnotationOf(Annotation potentialContainer, Class<?> potentialRepeatable) {
+        Repeatable repeatable = potentialRepeatable.getAnnotation(Repeatable.class);
+        return repeatable != null && repeatable.value().equals(potentialContainer.annotationType());
+    }
 
-	static <A extends Annotation> Stream<A> findAnnotations(ExtensionContext context, Class<A> annotationType,
-			boolean findRepeated, boolean findAllEnclosing) {
-		/*
-		 * Implementation notes:
-		 *
-		 * This method starts with the specified element and, if not happy with the results (depends on the
-		 * arguments and whether the annotation is present) kicks off a recursive search. The recursion steps
-		 * through enclosing types (if required by the arguments, thus handling _enclosing-presence_) and
-		 * eventually calls either `AnnotationSupport::findRepeatableAnnotations` or
-		 * `AnnotationSupport::findAnnotation` (depending on arguments, thus handling the repeatable case).
-		 * Both of these methods check for _meta-presence_ and _indirect presence_.
-		 */
-		List<A> onMethod = context
-				.getTestMethod()
-				.map(method -> findOnMethod(method, annotationType, findRepeated))
-				.orElse(List.of());
-		if (!findAllEnclosing && !onMethod.isEmpty())
-			return onMethod.stream();
-		Stream<A> onClass = findOnOuterClasses(context.getTestClass(), annotationType, findRepeated, findAllEnclosing);
+    static <A extends Annotation> Stream<A> findAnnotations(ExtensionContext context, Class<A> annotationType, boolean findRepeated, boolean findAllEnclosing) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		return Stream.concat(onMethod.stream(), onClass);
-	}
+    private static <A extends Annotation> List<A> findOnMethod(Method element, Class<A> annotationType, boolean findRepeated) {
+        if (findRepeated)
+            return AnnotationSupport.findRepeatableAnnotations(element, annotationType);
+        else
+            return AnnotationSupport.findAnnotation(element, annotationType).stream().collect(toUnmodifiableList());
+    }
 
-	private static <A extends Annotation> List<A> findOnMethod(Method element, Class<A> annotationType,
-			boolean findRepeated) {
-		if (findRepeated)
-			return AnnotationSupport.findRepeatableAnnotations(element, annotationType);
-		else
-			return AnnotationSupport.findAnnotation(element, annotationType).stream().collect(toUnmodifiableList());
-	}
+    private static <A extends Annotation> Stream<A> findOnOuterClasses(Optional<Class<?>> type, Class<A> annotationType, boolean findRepeated, boolean findAllEnclosing) {
+        if (type.isEmpty())
+            return Stream.empty();
+        List<A> onThisClass = Arrays.asList(type.get().getAnnotationsByType(annotationType));
+        if (!findAllEnclosing && !onThisClass.isEmpty())
+            return onThisClass.stream();
+        List<A> onClass = findOnType(type.get(), annotationType, findRepeated, findAllEnclosing);
+        Stream<A> onParentClass = findOnOuterClasses(type.map(Class::getEnclosingClass), annotationType, findRepeated, findAllEnclosing);
+        return Stream.concat(onClass.stream(), onParentClass);
+    }
 
-	private static <A extends Annotation> Stream<A> findOnOuterClasses(Optional<Class<?>> type, Class<A> annotationType,
-			boolean findRepeated, boolean findAllEnclosing) {
-		if (type.isEmpty())
-			return Stream.empty();
+    private static <A extends Annotation> List<A> findOnType(Class<?> element, Class<A> annotationType, boolean findRepeated, boolean findAllEnclosing) {
+        if (element == null || element == Object.class)
+            return List.of();
+        if (findRepeated)
+            return AnnotationSupport.findRepeatableAnnotations(element, annotationType);
+        List<A> onElement = AnnotationSupport.findAnnotation(element, annotationType).stream().collect(toUnmodifiableList());
+        List<A> onInterfaces = Arrays.stream(element.getInterfaces()).flatMap(clazz -> findOnType(clazz, annotationType, false, findAllEnclosing).stream()).collect(toUnmodifiableList());
+        if (!annotationType.isAnnotationPresent(Inherited.class)) {
+            if (!findAllEnclosing)
+                return onElement;
+            else
+                return Stream.of(onElement, onInterfaces).flatMap(Collection::stream).distinct().collect(toUnmodifiableList());
+        }
+        List<A> onSuperclass = findOnType(element.getSuperclass(), annotationType, false, findAllEnclosing);
+        return Stream.of(onElement, onInterfaces, onSuperclass).flatMap(Collection::stream).distinct().collect(toUnmodifiableList());
+    }
 
-		List<A> onThisClass = Arrays.asList(type.get().getAnnotationsByType(annotationType));
-		if (!findAllEnclosing && !onThisClass.isEmpty())
-			return onThisClass.stream();
+    // Explicitly used by CartesianTestExtension.
+    public static List<Annotation> findParameterArgumentsSources(Method testMethod) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		List<A> onClass = findOnType(type.get(), annotationType, findRepeated, findAllEnclosing);
-		Stream<A> onParentClass = findOnOuterClasses(type.map(Class::getEnclosingClass), annotationType, findRepeated,
-			findAllEnclosing);
-		return Stream.concat(onClass.stream(), onParentClass);
-	}
+    private static List<Annotation> collectArgumentSources(Parameter parameter) {
+        List<Annotation> annotations = new ArrayList<>();
+        AnnotationSupport.findAnnotation(parameter, CartesianArgumentsSource.class).ifPresent(annotations::add);
+        // ArgumentSource meta-annotations are allowed on parameters for
+        // CartesianTest because there is no overlap with ParameterizedTest
+        annotations.addAll(AnnotationSupport.findRepeatableAnnotations(parameter, ArgumentsSource.class));
+        return annotations;
+    }
 
-	private static <A extends Annotation> List<A> findOnType(Class<?> element, Class<A> annotationType,
-			boolean findRepeated, boolean findAllEnclosing) {
-		if (element == null || element == Object.class)
-			return List.of();
-		if (findRepeated)
-			return AnnotationSupport.findRepeatableAnnotations(element, annotationType);
-
-		List<A> onElement = AnnotationSupport
-				.findAnnotation(element, annotationType)
-				.stream()
-				.collect(toUnmodifiableList());
-		List<A> onInterfaces = Arrays
-				.stream(element.getInterfaces())
-				.flatMap(clazz -> findOnType(clazz, annotationType, false, findAllEnclosing).stream())
-				.collect(toUnmodifiableList());
-		if (!annotationType.isAnnotationPresent(Inherited.class)) {
-			if (!findAllEnclosing)
-				return onElement;
-			else
-				return Stream
-						.of(onElement, onInterfaces)
-						.flatMap(Collection::stream)
-						.distinct()
-						.collect(toUnmodifiableList());
-		}
-		List<A> onSuperclass = findOnType(element.getSuperclass(), annotationType, false, findAllEnclosing);
-		return Stream
-				.of(onElement, onInterfaces, onSuperclass)
-				.flatMap(Collection::stream)
-				.distinct()
-				.collect(toUnmodifiableList());
-	}
-
-	// Explicitly used by CartesianTestExtension.
-	public static List<Annotation> findParameterArgumentsSources(Method testMethod) {
-		return Arrays
-				.stream(testMethod.getParameters())
-				.map(PioneerAnnotationUtils::collectArgumentSources)
-				.filter(not(List::isEmpty))
-				.map(annotations -> annotations.get(0))
-				.collect(toUnmodifiableList());
-	}
-
-	private static List<Annotation> collectArgumentSources(Parameter parameter) {
-		List<Annotation> annotations = new ArrayList<>();
-		AnnotationSupport.findAnnotation(parameter, CartesianArgumentsSource.class).ifPresent(annotations::add);
-		// ArgumentSource meta-annotations are allowed on parameters for
-		// CartesianTest because there is no overlap with ParameterizedTest
-		annotations.addAll(AnnotationSupport.findRepeatableAnnotations(parameter, ArgumentsSource.class));
-		return annotations;
-	}
-
-	// Explicitly used by CartesianTestExtension.
-	public static List<Annotation> findMethodArgumentsSources(Method testMethod) {
-		return Arrays
-				.stream(testMethod.getAnnotations())
-				.filter(annotation -> AnnotationSupport
-						.findAnnotation(annotation.annotationType(), CartesianArgumentsSource.class)
-						.isPresent())
-				.collect(toUnmodifiableList());
-	}
-
+    // Explicitly used by CartesianTestExtension.
+    public static List<Annotation> findMethodArgumentsSources(Method testMethod) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

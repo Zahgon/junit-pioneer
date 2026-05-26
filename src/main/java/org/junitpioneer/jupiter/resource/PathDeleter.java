@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.resource;
 
 import java.io.IOException;
@@ -19,22 +18,19 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 class PathDeleter extends SimpleFileVisitor<Path> {
 
-	static final PathDeleter INSTANCE = new PathDeleter();
+    static final PathDeleter INSTANCE = new PathDeleter();
 
-	private PathDeleter() {
-		// private constructor to prevent instantiation of utility class
-	}
+    private PathDeleter() {
+        // private constructor to prevent instantiation of utility class
+    }
 
-	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		Files.deleteIfExists(file);
-		return FileVisitResult.CONTINUE;
-	}
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		Files.deleteIfExists(dir);
-		return FileVisitResult.CONTINUE;
-	}
-
+    @Override
+    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

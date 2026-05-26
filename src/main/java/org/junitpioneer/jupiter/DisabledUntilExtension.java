@@ -7,19 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junitpioneer.internal.PioneerAnnotationUtils.findClosestEnclosingAnnotation;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
-
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -32,50 +29,37 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 class DisabledUntilExtension implements ExecutionCondition {
 
-	private static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ISO_DATE;
+    private static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ISO_DATE;
 
-	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		return getUntilDateFromAnnotation(context)
-				.map(untilDate -> evaluateUntilDate(context, untilDate))
-				.orElse(enabled("No @DisabledUntil annotation found on element"));
-	}
+    @Override
+    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private Optional<LocalDate> getUntilDateFromAnnotation(ExtensionContext context) {
-		return findClosestEnclosingAnnotation(context, DisabledUntil.class)
-				.map(DisabledUntil::date)
-				.map(this::parseDate);
-	}
+    private Optional<LocalDate> getUntilDateFromAnnotation(ExtensionContext context) {
+        return findClosestEnclosingAnnotation(context, DisabledUntil.class).map(DisabledUntil::date).map(this::parseDate);
+    }
 
-	private LocalDate parseDate(String dateString) {
-		try {
-			return LocalDate.parse(dateString, ISO_8601);
-		}
-		catch (DateTimeParseException ex) {
-			throw new ExtensionConfigurationException(
-				"The `untilDate` string '" + dateString + "' is no valid ISO-8601 string.", ex);
-		}
-	}
+    private LocalDate parseDate(String dateString) {
+        try {
+            return LocalDate.parse(dateString, ISO_8601);
+        } catch (DateTimeParseException ex) {
+            throw new ExtensionConfigurationException("The `untilDate` string '" + dateString + "' is no valid ISO-8601 string.", ex);
+        }
+    }
 
-	private ConditionEvaluationResult evaluateUntilDate(ExtensionContext context, LocalDate untilDate) {
-		LocalDate today = LocalDate.now();
-		boolean disabled = today.isBefore(untilDate);
-
-		if (disabled) {
-			String reportEntry = format(
-				"This test is disabled until %s. If executing it on this commit would fail, the build can't be reproduced after that date.",
-				untilDate.format(ISO_8601));
-			context.publishReportEntry("DisabledUntil", reportEntry);
-			String message = format("The `date` %s is after the current date %s", untilDate.format(ISO_8601),
-				today.format(ISO_8601));
-			return disabled(message);
-		} else {
-			String message = format(
-				"The `date` %s is before or on the current date %s, so `@DisabledUntil` no longer disabled test \"%s\". Please remove the annotation.",
-				untilDate.format(ISO_8601), today.format(ISO_8601), context.getUniqueId());
-			context.publishReportEntry(DisabledUntilExtension.class.getSimpleName(), message);
-			return enabled(message);
-		}
-	}
-
+    private ConditionEvaluationResult evaluateUntilDate(ExtensionContext context, LocalDate untilDate) {
+        LocalDate today = LocalDate.now();
+        boolean disabled = today.isBefore(untilDate);
+        if (disabled) {
+            String reportEntry = format("This test is disabled until %s. If executing it on this commit would fail, the build can't be reproduced after that date.", untilDate.format(ISO_8601));
+            context.publishReportEntry("DisabledUntil", reportEntry);
+            String message = format("The `date` %s is after the current date %s", untilDate.format(ISO_8601), today.format(ISO_8601));
+            return disabled(message);
+        } else {
+            String message = format("The `date` %s is before or on the current date %s, so `@DisabledUntil` no longer disabled test \"%s\". Please remove the annotation.", untilDate.format(ISO_8601), today.format(ISO_8601), context.getUniqueId());
+            context.publishReportEntry(DisabledUntilExtension.class.getSimpleName(), message);
+            return enabled(message);
+        }
+    }
 }

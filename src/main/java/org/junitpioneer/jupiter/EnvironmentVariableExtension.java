@@ -7,106 +7,76 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toSet;
-
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-class EnvironmentVariableExtension extends
-		AbstractEntryBasedExtension<String, String, ClearEnvironmentVariable, SetEnvironmentVariable, RestoreEnvironmentVariables> {
+class EnvironmentVariableExtension extends AbstractEntryBasedExtension<String, String, ClearEnvironmentVariable, SetEnvironmentVariable, RestoreEnvironmentVariables> {
 
-	// package visible to make accessible for tests
-	static final AtomicBoolean REPORTED_WARNING = new AtomicBoolean(false);
-	static final String WARNING_KEY = EnvironmentVariableExtension.class.getSimpleName();
-	static final String WARNING_VALUE = "This extension uses reflection to access and modify JDK internals, which is fragile."
-			+ "Have a look at the documentation for further details:"
-			+ "https://junit-pioneer.org/docs/environment-variables/#warnings-for-reflective-access";
+    // package visible to make accessible for tests
+    static final AtomicBoolean REPORTED_WARNING = new AtomicBoolean(false);
 
-	@Override
-	protected Function<ClearEnvironmentVariable, String> clearKeyMapper() {
-		return ClearEnvironmentVariable::key;
-	}
+    static final String WARNING_KEY = EnvironmentVariableExtension.class.getSimpleName();
 
-	@Override
-	protected Function<SetEnvironmentVariable, String> setKeyMapper() {
-		return SetEnvironmentVariable::key;
-	}
+    static final String WARNING_VALUE = "This extension uses reflection to access and modify JDK internals, which is fragile." + "Have a look at the documentation for further details:" + "https://junit-pioneer.org/docs/environment-variables/#warnings-for-reflective-access";
 
-	@Override
-	protected Function<SetEnvironmentVariable, String> setValueMapper() {
-		return SetEnvironmentVariable::value;
-	}
+    @Override
+    protected Function<ClearEnvironmentVariable, String> clearKeyMapper() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void reportWarning(ExtensionContext context) {
-		boolean wasReported = REPORTED_WARNING.getAndSet(true);
-		if (wasReported)
-			return;
+    @Override
+    protected Function<SetEnvironmentVariable, String> setKeyMapper() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		// Log as report entry and to System.out - check docs for reasons, but why System.out?
-		// Because report entries lack tool support and are easily lost and System.err is
-		// too invasive (particularly since, with good configuration, the module system won't
-		// print a warning and hence it's only Pioneer polluting System.err - not good).
-		// System.out seemed like a good compromise.
-		context.publishReportEntry(WARNING_KEY, WARNING_VALUE);
-		System.out.println(WARNING_KEY + ": " + WARNING_VALUE); //NOSONAR
-	}
+    @Override
+    protected Function<SetEnvironmentVariable, String> setValueMapper() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void clearEntry(String key) {
-		EnvironmentVariableUtils.clear(key);
-	}
+    @Override
+    protected void reportWarning(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected String getEntry(String key) {
-		return System.getenv(key);
-	}
+    @Override
+    protected void clearEntry(String key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void setEntry(String key, String value) {
-		EnvironmentVariableUtils.set(key, value);
-	}
+    @Override
+    protected String getEntry(String key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * This implementation uses the "Post swap" strategy, returning a clone of the environment variables
-	 * which will be restored in {@link AbstractEntryBasedExtension#prepareToExitRestorableContext}.
-	 *
-	 * <p>See {@link AbstractEntryBasedExtension#prepareToEnterRestorableContext} for more details.</p>
-	 *
-	 * @return A clone of the current environment variables, as a {@code Properties} object.
-	 */
-	@Override
-	protected Properties prepareToEnterRestorableContext() {
-		Properties clone = new Properties();
-		clone.putAll(System.getenv());
-		return clone;
-	}
+    @Override
+    protected void setEntry(String key, String value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void prepareToExitRestorableContext(Properties restoreMe) {
-		Map<String, String> existingEnv = System.getenv();
+    /**
+     * This implementation uses the "Post swap" strategy, returning a clone of the environment variables
+     * which will be restored in {@link AbstractEntryBasedExtension#prepareToExitRestorableContext}.
+     *
+     * <p>See {@link AbstractEntryBasedExtension#prepareToEnterRestorableContext} for more details.</p>
+     *
+     * @return A clone of the current environment variables, as a {@code Properties} object.
+     */
+    @Override
+    protected Properties prepareToEnterRestorableContext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		// Set all values, but only if different from actual value
-		restoreMe
-				.entrySet()
-				.stream()
-				.filter(e -> !e.getValue().equals(System.getenv(e.getKey().toString())))
-				.forEach(e -> setEntry(e.getKey().toString(), e.getValue().toString()));
-
-		// Find entries to remove.
-		// Cannot remove in stream b/c the stream is based on the collection that needs to be modified
-		Set<String> entriesToClear = existingEnv.keySet().stream().filter(not(restoreMe::containsKey)).collect(toSet());
-
-		entriesToClear.forEach(this::clearEntry);
-	}
-
+    @Override
+    protected void prepareToExitRestorableContext(Properties restoreMe) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

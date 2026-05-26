@@ -7,25 +7,23 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DefaultObjectMapperProvider implements ObjectMapperProvider {
 
-	public DefaultObjectMapperProvider() {
-		// recreate default constructor to prevent compiler warning
-	}
+    public DefaultObjectMapperProvider() {
+        // recreate default constructor to prevent compiler warning
+    }
 
-	@Override
-	public ObjectMapper get() {
-		return new ObjectMapper();
-	}
+    @Override
+    public ObjectMapper get() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String id() {
-		return "default";
-	}
-
+    @Override
+    public String id() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

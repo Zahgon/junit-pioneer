@@ -7,17 +7,14 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.vintage;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
-
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Optional;
-
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -33,30 +30,22 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
  */
 class TimeoutExtension implements InvocationInterceptor {
 
-	static final String TEST_RAN_TOO_LONG = "Test '%s' was supposed to run no longer than %d ms.";
+    static final String TEST_RAN_TOO_LONG = "Test '%s' was supposed to run no longer than %d ms.";
 
-	@Override
-	public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
-			ExtensionContext extensionContext) throws Throwable {
-		Optional<Long> optionalTimeout = annotatedTimeout(extensionContext);
-		if (optionalTimeout.isPresent())
-			proceedWithTimeout(invocation, extensionContext, optionalTimeout.get());
-		else
-			invocation.proceed();
-	}
+    @Override
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private void proceedWithTimeout(Invocation<Void> invocation, ExtensionContext extensionContext, long timeout) {
-		if (timeout < 0)
-			throw new ExtensionConfigurationException("Timeout for vintage @Test must be positive.");
+    private void proceedWithTimeout(Invocation<Void> invocation, ExtensionContext extensionContext, long timeout) {
+        if (timeout < 0)
+            throw new ExtensionConfigurationException("Timeout for vintage @Test must be positive.");
+        assertTimeoutPreemptively(Duration.ofMillis(timeout), invocation::proceed, format(TEST_RAN_TOO_LONG, extensionContext.getDisplayName(), timeout));
+    }
 
-		assertTimeoutPreemptively(Duration.ofMillis(timeout), invocation::proceed,
-			format(TEST_RAN_TOO_LONG, extensionContext.getDisplayName(), timeout));
-	}
-
-	// vintage @Test is deprecated (not for removal)
-	@SuppressWarnings("deprecation")
-	private Optional<Long> annotatedTimeout(ExtensionContext context) {
-		return findAnnotation(context.getElement(), Test.class).map(Test::timeout).filter(timeout -> timeout != 0L);
-	}
-
+    // vintage @Test is deprecated (not for removal)
+    @SuppressWarnings("deprecation")
+    private Optional<Long> annotatedTimeout(ExtensionContext context) {
+        return findAnnotation(context.getElement(), Test.class).map(Test::timeout).filter(timeout -> timeout != 0L);
+    }
 }

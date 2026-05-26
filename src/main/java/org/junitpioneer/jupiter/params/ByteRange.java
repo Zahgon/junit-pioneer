@@ -7,18 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 class ByteRange extends Range<Byte> {
 
-	public ByteRange(ByteRangeSource source) {
-		super(source.from(), source.to(), source.step(), source.closed(), (byte) 0);
-	}
+    public ByteRange(ByteRangeSource source) {
+        super(source.from(), source.to(), source.step(), source.closed(), (byte) 0);
+    }
 
-	@Override
-	public Byte nextValue() {
-		return (byte) (getCurrent() + getStep());
-	}
-
+    @Override
+    public Byte nextValue() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

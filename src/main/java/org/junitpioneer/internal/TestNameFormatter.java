@@ -7,15 +7,12 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.internal;
 
 import static java.util.stream.Collectors.joining;
-
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 
@@ -28,68 +25,56 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
  */
 public final class TestNameFormatter {
 
-	// This code is a slightly refactored variant of the JUnit Jupiter class
-	// `org.junit.jupiter.params.ParameterizedTestNameFormatter` (from v5.8.2).
+    // This code is a slightly refactored variant of the JUnit Jupiter class
+    // `org.junit.jupiter.params.ParameterizedTestNameFormatter` (from v5.8.2).
+    public static final String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
 
-	public static final String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
-	public static final String INDEX_PLACEHOLDER = "{index}";
-	public static final String ARGUMENTS_PLACEHOLDER = "{arguments}";
+    public static final String INDEX_PLACEHOLDER = "{index}";
 
-	private final String pattern;
-	private final String displayName;
-	private final Class<?> forClass;
+    public static final String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
-	public TestNameFormatter(String pattern, String displayName, Class<?> forClass) {
-		this.pattern = pattern;
-		this.displayName = displayName;
-		this.forClass = forClass;
-	}
+    private final String pattern;
 
-	public String format(int invocationIndex, Object... arguments) {
-		try {
-			return formatSafely(invocationIndex, arguments);
-		}
-		catch (Exception ex) {
-			String message = "The display name pattern defined for the " + forClass.getName() + " is invalid. "
-					+ "See nested exception for further details.";
-			throw new ExtensionConfigurationException(message, ex);
-		}
-	}
+    private final String displayName;
 
-	private String formatSafely(int invocationIndex, Object[] arguments) {
-		String messageFormatPattern = prepareMessageFormatPattern(invocationIndex, arguments);
-		MessageFormat format = new MessageFormat(messageFormatPattern);
-		Object[] readableArguments = makeReadable(arguments);
-		return format.format(readableArguments);
-	}
+    private final Class<?> forClass;
 
-	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
-		String result = pattern
-				.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName)
-				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
+    public TestNameFormatter(String pattern, String displayName, Class<?> forClass) {
+        this.pattern = pattern;
+        this.displayName = displayName;
+        this.forClass = forClass;
+    }
 
-		if (result.contains(ARGUMENTS_PLACEHOLDER)) {
-			String replacement = IntStream
-					.range(0, arguments.length)
-					.mapToObj(index -> "{" + index + "}")
-					.collect(joining(", "));
-			result = result.replace(ARGUMENTS_PLACEHOLDER, replacement);
-		}
+    public String format(int invocationIndex, Object... arguments) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		return result;
-	}
+    private String formatSafely(int invocationIndex, Object[] arguments) {
+        String messageFormatPattern = prepareMessageFormatPattern(invocationIndex, arguments);
+        MessageFormat format = new MessageFormat(messageFormatPattern);
+        Object[] readableArguments = makeReadable(arguments);
+        return format.format(readableArguments);
+    }
 
-	private Object[] makeReadable(Object[] arguments) {
-		Object[] result = Arrays.copyOf(arguments, arguments.length, Object[].class);
-		for (int i = 0; i < result.length; i++) {
-			Object argument = arguments[i];
-			if (argument instanceof Named<?>) {
-				result[i] = ((Named<?>) argument).getName();
-			} else {
-				result[i] = PioneerUtils.nullSafeToString(arguments[i]);
-			}
-		}
-		return result;
-	}
+    private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
+        String result = pattern.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName).replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
+        if (result.contains(ARGUMENTS_PLACEHOLDER)) {
+            String replacement = IntStream.range(0, arguments.length).mapToObj(index -> "{" + index + "}").collect(joining(", "));
+            result = result.replace(ARGUMENTS_PLACEHOLDER, replacement);
+        }
+        return result;
+    }
 
+    private Object[] makeReadable(Object[] arguments) {
+        Object[] result = Arrays.copyOf(arguments, arguments.length, Object[].class);
+        for (int i = 0; i < result.length; i++) {
+            Object argument = arguments[i];
+            if (argument instanceof Named<?>) {
+                result[i] = ((Named<?>) argument).getName();
+            } else {
+                result[i] = PioneerUtils.nullSafeToString(arguments[i]);
+            }
+        }
+        return result;
+    }
 }

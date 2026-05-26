@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -15,15 +14,14 @@ import org.junitpioneer.internal.TestNameFormatter;
 
 class RetryingTestInvocationContext implements TestTemplateInvocationContext {
 
-	private final TestNameFormatter formatter;
+    private final TestNameFormatter formatter;
 
-	RetryingTestInvocationContext(TestNameFormatter formatter) {
-		this.formatter = formatter;
-	}
+    RetryingTestInvocationContext(TestNameFormatter formatter) {
+        this.formatter = formatter;
+    }
 
-	@Override
-	public String getDisplayName(int invocationIndex) {
-		return formatter.format(invocationIndex);
-	}
-
+    @Override
+    public String getDisplayName(int invocationIndex) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

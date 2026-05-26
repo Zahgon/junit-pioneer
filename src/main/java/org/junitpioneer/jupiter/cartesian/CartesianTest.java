@@ -7,12 +7,10 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.cartesian;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +19,6 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -54,273 +51,256 @@ import org.junitpioneer.jupiter.cartesian.CartesianEnumArgumentsProvider.NullEnu
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CartesianTest {
 
-	/**
-	 * Placeholder for the display name of a {@code @CartesianTest}:
-	 * <code>{displayName}</code>
-	 *
-	 * @since 1.5
-	 * @see #name
-	 */
-	String DISPLAY_NAME_PLACEHOLDER = TestNameFormatter.DISPLAY_NAME_PLACEHOLDER;
+    /**
+     * Placeholder for the display name of a {@code @CartesianTest}:
+     * <code>{displayName}</code>
+     *
+     * @since 1.5
+     * @see #name
+     */
+    String DISPLAY_NAME_PLACEHOLDER = TestNameFormatter.DISPLAY_NAME_PLACEHOLDER;
 
-	/**
-	 * Placeholder for the current invocation index of a {@code @CartesianTest}
-	 * method (1-based): <code>{index}</code>
-	 *
-	 * @since 1.5
-	 * @see #name
-	 */
-	String INDEX_PLACEHOLDER = TestNameFormatter.INDEX_PLACEHOLDER;
+    /**
+     * Placeholder for the current invocation index of a {@code @CartesianTest}
+     * method (1-based): <code>{index}</code>
+     *
+     * @since 1.5
+     * @see #name
+     */
+    String INDEX_PLACEHOLDER = TestNameFormatter.INDEX_PLACEHOLDER;
 
-	/**
-	 * Placeholder for the complete, comma-separated arguments list of the
-	 * current invocation of a {@code @CartesianTest} method:
-	 * <code>{arguments}</code>
-	 *
-	 * @since 1.5
-	 * @see #name
-	 */
-	String ARGUMENTS_PLACEHOLDER = TestNameFormatter.ARGUMENTS_PLACEHOLDER;
+    /**
+     * Placeholder for the complete, comma-separated arguments list of the
+     * current invocation of a {@code @CartesianTest} method:
+     * <code>{arguments}</code>
+     *
+     * @since 1.5
+     * @see #name
+     */
+    String ARGUMENTS_PLACEHOLDER = TestNameFormatter.ARGUMENTS_PLACEHOLDER;
 
-	/**
-	 * The display name to be used for individual invocations of the
-	 * parameterized test; never blank or consisting solely of whitespace.
-	 *
-	 * <p>Defaults to [{index}] {arguments}.</p>
-	 *
-	 * <p>Supported placeholders:</p>
-	 *
-	 * <ul>
-	 * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#DISPLAY_NAME_PLACEHOLDER}</li>
-	 * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#INDEX_PLACEHOLDER}</li>
-	 * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#ARGUMENTS_PLACEHOLDER}</li>
-	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
-	 * </ul>
-	 *
-	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
-	 * to customize formatting.</p>
-	 *
-	 * @since 1.5
-	 * @see java.text.MessageFormat
-	 * @see org.junit.jupiter.params.ParameterizedTest#name()
-	 */
-	String name() default "[{index}] {arguments}";
+    /**
+     * The display name to be used for individual invocations of the
+     * parameterized test; never blank or consisting solely of whitespace.
+     *
+     * <p>Defaults to [{index}] {arguments}.</p>
+     *
+     * <p>Supported placeholders:</p>
+     *
+     * <ul>
+     * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#DISPLAY_NAME_PLACEHOLDER}</li>
+     * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#INDEX_PLACEHOLDER}</li>
+     * <li>{@link org.junitpioneer.jupiter.cartesian.CartesianTest#ARGUMENTS_PLACEHOLDER}</li>
+     * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
+     * </ul>
+     *
+     * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
+     * to customize formatting.</p>
+     *
+     * @since 1.5
+     * @see java.text.MessageFormat
+     * @see org.junit.jupiter.params.ParameterizedTest#name()
+     */
+    String name() default "[{index}] {arguments}";
 
-	/**
-	 * Parameter annotation to be used with {@code CartesianTest} for providing simple values.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-	@CartesianArgumentsSource(CartesianValueArgumentsProvider.class)
-	@interface Values {
+    /**
+     * Parameter annotation to be used with {@code CartesianTest} for providing simple values.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @CartesianArgumentsSource(CartesianValueArgumentsProvider.class)
+    @interface Values {
 
-		/**
-		 * The {@code short} values to use as sources of arguments; must not be empty.
-		 */
-		short[] shorts() default {};
+        /**
+         * The {@code short} values to use as sources of arguments; must not be empty.
+         */
+        short[] shorts() default {};
 
-		/**
-		 * The {@code byte} values to use as sources of arguments; must not be empty.
-		 */
-		byte[] bytes() default {};
+        /**
+         * The {@code byte} values to use as sources of arguments; must not be empty.
+         */
+        byte[] bytes() default {};
 
-		/**
-		 * The {@code int} values to use as sources of arguments; must not be empty.
-		 */
-		int[] ints() default {};
+        /**
+         * The {@code int} values to use as sources of arguments; must not be empty.
+         */
+        int[] ints() default {};
 
-		/**
-		 * The {@code long} values to use as sources of arguments; must not be empty.
-		 */
-		long[] longs() default {};
+        /**
+         * The {@code long} values to use as sources of arguments; must not be empty.
+         */
+        long[] longs() default {};
 
-		/**
-		 * The {@code float} values to use as sources of arguments; must not be empty.
-		 */
-		float[] floats() default {};
+        /**
+         * The {@code float} values to use as sources of arguments; must not be empty.
+         */
+        float[] floats() default {};
 
-		/**
-		 * The {@code double} values to use as sources of arguments; must not be empty.
-		 */
-		double[] doubles() default {};
+        /**
+         * The {@code double} values to use as sources of arguments; must not be empty.
+         */
+        double[] doubles() default {};
 
-		/**
-		 * The {@code char} values to use as sources of arguments; must not be empty.
-		 */
-		char[] chars() default {};
+        /**
+         * The {@code char} values to use as sources of arguments; must not be empty.
+         */
+        char[] chars() default {};
 
-		/**
-		 * The {@code boolean} values to use as sources of arguments; must not be empty.
-		 */
-		boolean[] booleans() default {};
+        /**
+         * The {@code boolean} values to use as sources of arguments; must not be empty.
+         */
+        boolean[] booleans() default {};
 
-		/**
-		 * The {@link String} values to use as sources of arguments; must not be empty.
-		 */
-		String[] strings() default {};
+        /**
+         * The {@link String} values to use as sources of arguments; must not be empty.
+         */
+        String[] strings() default {};
 
-		/**
-		 * The {@link Class} values to use as sources of arguments; must not be empty.
-		 */
-		Class<?>[] classes() default {};
+        /**
+         * The {@link Class} values to use as sources of arguments; must not be empty.
+         */
+        Class<?>[] classes() default {};
+    }
 
-	}
+    /**
+     * Parameter annotation to be used with {@code CartesianTest} for providing enum values.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @CartesianArgumentsSource(CartesianEnumArgumentsProvider.class)
+    @interface Enum {
 
-	/**
-	 * Parameter annotation to be used with {@code CartesianTest} for providing enum values.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-	@CartesianArgumentsSource(CartesianEnumArgumentsProvider.class)
-	@interface Enum {
+        /**
+         * The enum type that serves as the source of the enum constants.
+         *
+         * <p>If this attribute is not set explicitly, the declared type of the
+         * parameter of the {@code @CartesianProductTest} method, which has the
+         * same relative index of the annotation, is used.
+         *
+         * <p>For example, in case of the following test:
+         * <pre><code class='java'>
+         * &#64;CartesianProductTest
+         * &#64;CartesianTest.Enum
+         * &#64;CartesianTest.Enum
+         * void multipleOmittedTypes(FirstEnum e1, SecondEnum e2) {
+         * 	...
+         * }
+         * </code></pre>
+         * the first {@code @CartesianTest.Enum} annotation will provide all the values of {@code FirstEnum},
+         * while the second annotation will provide all the values of {@code SecondEnum}.
+         *
+         * @see #names
+         * @see #mode
+         */
+        Class<? extends java.lang.Enum<?>> value() default NullEnum.class;
 
-		/**
-		 * The enum type that serves as the source of the enum constants.
-		 *
-		 * <p>If this attribute is not set explicitly, the declared type of the
-		 * parameter of the {@code @CartesianProductTest} method, which has the
-		 * same relative index of the annotation, is used.
-		 *
-		 * <p>For example, in case of the following test:
-		 * <pre><code class='java'>
-		 * &#64;CartesianProductTest
-		 * &#64;CartesianTest.Enum
-		 * &#64;CartesianTest.Enum
-		 * void multipleOmittedTypes(FirstEnum e1, SecondEnum e2) {
-		 * 	...
-		 * }
-		 * </code></pre>
-		 * the first {@code @CartesianTest.Enum} annotation will provide all the values of {@code FirstEnum},
-		 * while the second annotation will provide all the values of {@code SecondEnum}.
-		 *
-		 * @see #names
-		 * @see #mode
-		 */
-		Class<? extends java.lang.Enum<?>> value() default NullEnum.class;
+        /**
+         * The names of enum constants to provide, or regular expressions to select
+         * the names of enum constants to provide.
+         *
+         * <p>If no names or regular expressions are specified, all enum constants
+         * declared in the specified {@linkplain #value enum type} will be provided.
+         *
+         * <p>The {@link #mode} determines how the names are interpreted.
+         *
+         * @see #value
+         * @see #mode
+         */
+        String[] names() default {};
 
-		/**
-		 * The names of enum constants to provide, or regular expressions to select
-		 * the names of enum constants to provide.
-		 *
-		 * <p>If no names or regular expressions are specified, all enum constants
-		 * declared in the specified {@linkplain #value enum type} will be provided.
-		 *
-		 * <p>The {@link #mode} determines how the names are interpreted.
-		 *
-		 * @see #value
-		 * @see #mode
-		 */
-		String[] names() default {};
+        /**
+         * The enum constant selection mode.
+         *
+         * <p>Defaults to {@link CartesianTest.Enum.Mode#INCLUDE INCLUDE}.
+         *
+         * @see CartesianTest.Enum.Mode#INCLUDE
+         * @see CartesianTest.Enum.Mode#EXCLUDE
+         * @see CartesianTest.Enum.Mode#MATCH_ALL
+         * @see CartesianTest.Enum.Mode#MATCH_ANY
+         * @see #names
+         */
+        CartesianTest.Enum.Mode mode() default CartesianTest.Enum.Mode.INCLUDE;
 
-		/**
-		 * The enum constant selection mode.
-		 *
-		 * <p>Defaults to {@link CartesianTest.Enum.Mode#INCLUDE INCLUDE}.
-		 *
-		 * @see CartesianTest.Enum.Mode#INCLUDE
-		 * @see CartesianTest.Enum.Mode#EXCLUDE
-		 * @see CartesianTest.Enum.Mode#MATCH_ALL
-		 * @see CartesianTest.Enum.Mode#MATCH_ANY
-		 * @see #names
-		 */
-		CartesianTest.Enum.Mode mode() default CartesianTest.Enum.Mode.INCLUDE;
+        /**
+         * Enumeration of modes for selecting enum constants by name.
+         */
+        enum Mode {
 
-		/**
-		 * Enumeration of modes for selecting enum constants by name.
-		 */
-		enum Mode {
+            /**
+             * Select only those enum constants whose names are supplied via the
+             * {@link CartesianTest.Enum#names} attribute.
+             */
+            INCLUDE(CartesianTest.Enum.Mode::validateNames, (name, names) -> names.contains(name)),
+            /**
+             * Select all declared enum constants except those supplied via the
+             * {@link CartesianTest.Enum#names} attribute.
+             */
+            EXCLUDE(CartesianTest.Enum.Mode::validateNames, (name, names) -> !names.contains(name)),
+            /**
+             * Select only those enum constants whose names match all patterns supplied
+             * via the {@link CartesianTest.Enum#names} attribute.
+             *
+             * @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
+             */
+            MATCH_ALL(CartesianTest.Enum.Mode::validatePatterns, (name, patterns) -> patterns.stream().allMatch(name::matches)),
+            /**
+             * Select only those enum constants whose names match any pattern supplied
+             * via the {@link CartesianTest.Enum#names} attribute.
+             *
+             * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
+             */
+            MATCH_ANY(CartesianTest.Enum.Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
 
-			/**
-			 * Select only those enum constants whose names are supplied via the
-			 * {@link CartesianTest.Enum#names} attribute.
-			 */
-			INCLUDE(CartesianTest.Enum.Mode::validateNames, (name, names) -> names.contains(name)),
+            private final CartesianTest.Enum.Mode.Validator validator;
 
-			/**
-			 * Select all declared enum constants except those supplied via the
-			 * {@link CartesianTest.Enum#names} attribute.
-			 */
-			EXCLUDE(CartesianTest.Enum.Mode::validateNames, (name, names) -> !names.contains(name)),
+            private final BiPredicate<String, Set<String>> selector;
 
-			/**
-			 * Select only those enum constants whose names match all patterns supplied
-			 * via the {@link CartesianTest.Enum#names} attribute.
-			 *
-			 * @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
-			 */
-			MATCH_ALL(CartesianTest.Enum.Mode::validatePatterns,
-					(name, patterns) -> patterns.stream().allMatch(name::matches)),
+            Mode(CartesianTest.Enum.Mode.Validator validator, BiPredicate<String, Set<String>> selector) {
+                this.validator = validator;
+                this.selector = selector;
+            }
 
-			/**
-			 * Select only those enum constants whose names match any pattern supplied
-			 * via the {@link CartesianTest.Enum#names} attribute.
-			 *
-			 * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
-			 */
-			MATCH_ANY(CartesianTest.Enum.Mode::validatePatterns,
-					(name, patterns) -> patterns.stream().anyMatch(name::matches));
+            void validate(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants, Set<String> names) {
+                throw new UnsupportedOperationException("STUB: not implemented");
+            }
 
-			private final CartesianTest.Enum.Mode.Validator validator;
-			private final BiPredicate<String, Set<String>> selector;
+            boolean select(java.lang.Enum<?> constant, Set<String> names) {
+                throw new UnsupportedOperationException("STUB: not implemented");
+            }
 
-			Mode(CartesianTest.Enum.Mode.Validator validator, BiPredicate<String, Set<String>> selector) {
-				this.validator = validator;
-				this.selector = selector;
-			}
+            private static void validateNames(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants, Set<String> names) {
+                Set<String> allNames = constants.stream().map(java.lang.Enum::name).collect(toSet());
+                if (!allNames.containsAll(names)) {
+                    throw new PreconditionViolationException("Invalid enum constant name(s) in " + enumSource + ". Valid names include: " + allNames);
+                }
+            }
 
-			void validate(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants,
-					Set<String> names) {
-				validator.validate(requireNonNull(enumSource), constants, requireNonNull(names));
-			}
+            private static void validatePatterns(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants, Set<String> names) {
+                try {
+                    names.forEach(Pattern::compile);
+                } catch (PatternSyntaxException e) {
+                    throw new PreconditionViolationException("Pattern compilation failed for a regular expression supplied in " + enumSource, e);
+                }
+            }
 
-			boolean select(java.lang.Enum<?> constant, Set<String> names) {
-				return selector.test(requireNonNull(constant.name()), requireNonNull(names));
-			}
+            private interface Validator {
 
-			private static void validateNames(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants,
-					Set<String> names) {
-				Set<String> allNames = constants.stream().map(java.lang.Enum::name).collect(toSet());
-				if (!allNames.containsAll(names)) {
-					throw new PreconditionViolationException(
-						"Invalid enum constant name(s) in " + enumSource + ". Valid names include: " + allNames);
-				}
-			}
+                void validate(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants, Set<String> names);
+            }
+        }
+    }
 
-			private static void validatePatterns(CartesianTest.Enum enumSource,
-					Set<? extends java.lang.Enum<?>> constants, Set<String> names) {
-				try {
-					names.forEach(Pattern::compile);
-				}
-				catch (PatternSyntaxException e) {
-					throw new PreconditionViolationException(
-						"Pattern compilation failed for a regular expression supplied in " + enumSource, e);
-				}
-			}
+    /**
+     * Points to a method to provide parameter values for a {@link CartesianTest}.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.METHOD, ElementType.ANNOTATION_TYPE })
+    @CartesianArgumentsSource(CartesianFactoryArgumentsProvider.class)
+    @interface MethodFactory {
 
-			private interface Validator {
-
-				void validate(CartesianTest.Enum enumSource, Set<? extends java.lang.Enum<?>> constants,
-						Set<String> names);
-
-			}
-
-		}
-
-	}
-
-	/**
-	 * Points to a method to provide parameter values for a {@link CartesianTest}.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.METHOD, ElementType.ANNOTATION_TYPE })
-	@CartesianArgumentsSource(CartesianFactoryArgumentsProvider.class)
-	@interface MethodFactory {
-
-		/**
-		 * The name of the method that returns an {@link ArgumentSets} instance.
-		 */
-		String value();
-
-	}
-
+        /**
+         * The name of the method that returns an {@link ArgumentSets} instance.
+         */
+        String value();
+    }
 }

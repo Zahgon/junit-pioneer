@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.resource;
 
 /**
@@ -30,21 +29,20 @@ package org.junitpioneer.jupiter.resource;
 @SuppressWarnings("try")
 public interface Resource<T> extends AutoCloseable {
 
-	/**
-	 * Returns the contents of the resource.
-	 *
-	 * @throws Exception if getting the resource failed
-	 */
-	T get() throws Exception;
+    /**
+     * Returns the contents of the resource.
+     *
+     * @throws Exception if getting the resource failed
+     */
+    T get() throws Exception;
 
-	/**
-	 * Closes the resource.
-	 *
-	 * @throws Exception if closing the resource failed
-	 */
-	@Override
-	default void close() throws Exception {
-		// no op by default
-	}
-
+    /**
+     * Closes the resource.
+     *
+     * @throws Exception if closing the resource failed
+     */
+    @Override
+    default void close() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

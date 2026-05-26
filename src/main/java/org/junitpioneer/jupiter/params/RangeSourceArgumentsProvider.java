@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 import java.lang.annotation.Annotation;
@@ -18,7 +17,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
@@ -45,50 +43,39 @@ import org.junitpioneer.jupiter.cartesian.CartesianParameterArgumentsProvider;
  * @see DoubleRangeSource
  * @see FloatRangeSource
  */
-class RangeSourceArgumentsProvider<N extends Number & Comparable<N>>
-		implements ArgumentsProvider, CartesianParameterArgumentsProvider<N> { //NOSONAR deprecated interface use will be removed in later release
+class RangeSourceArgumentsProvider<N extends Number & Comparable<N>> implements //NOSONAR deprecated interface use will be removed in later release
+ArgumentsProvider, //NOSONAR deprecated interface use will be removed in later release
+CartesianParameterArgumentsProvider<N> {
 
-	@Override
-	public Stream<N> provideArguments(ExtensionContext context, Parameter parameter) throws Exception {
-		Annotation argumentsSource = initArgumentsSource(parameter);
-		return provideArguments(argumentsSource);
-	}
+    @Override
+    public Stream<N> provideArguments(ExtensionContext context, Parameter parameter) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context)
-			throws Exception {
-		// since it's a method annotation, the element will always be present
-		Annotation argumentsSource = initArgumentsSource(context.getRequiredTestMethod());
+    @Override
+    public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		return provideArguments(argumentsSource).map(Arguments::of);
-	}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Stream<N> provideArguments(Annotation argumentsSource) throws Exception {
+        Class<? extends Annotation> argumentsSourceClass = argumentsSource.annotationType();
+        Class<? extends Range> rangeClass = argumentsSourceClass.getAnnotation(RangeClass.class).value();
+        Range<N> range = (Range<N>) rangeClass.getConstructors()[0].newInstance(argumentsSource);
+        range.validate();
+        return asStream(range);
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Stream<N> provideArguments(Annotation argumentsSource) throws Exception {
-		Class<? extends Annotation> argumentsSourceClass = argumentsSource.annotationType();
-		Class<? extends Range> rangeClass = argumentsSourceClass.getAnnotation(RangeClass.class).value();
+    private Annotation initArgumentsSource(AnnotatedElement element) {
+        List<Annotation> argumentsSources = PioneerAnnotationUtils.findAnnotatedAnnotations(element, ArgumentsSource.class);
+        if (argumentsSources.size() != 1) {
+            String message = String.format("Expected exactly one annotation to provide an ArgumentSource, found %d.", argumentsSources.size());
+            throw new IllegalArgumentException(message);
+        }
+        return argumentsSources.get(0);
+    }
 
-		Range<N> range = (Range<N>) rangeClass.getConstructors()[0].newInstance(argumentsSource);
-		range.validate();
-		return asStream(range);
-	}
-
-	private Annotation initArgumentsSource(AnnotatedElement element) {
-		List<Annotation> argumentsSources = PioneerAnnotationUtils
-				.findAnnotatedAnnotations(element, ArgumentsSource.class);
-
-		if (argumentsSources.size() != 1) {
-			String message = String
-					.format("Expected exactly one annotation to provide an ArgumentSource, found %d.",
-						argumentsSources.size());
-			throw new IllegalArgumentException(message);
-		}
-
-		return argumentsSources.get(0);
-	}
-
-	private Stream<N> asStream(Range<N> range) {
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(range, Spliterator.ORDERED), false);
-	}
-
+    private Stream<N> asStream(Range<N> range) {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(range, Spliterator.ORDERED), false);
+    }
 }

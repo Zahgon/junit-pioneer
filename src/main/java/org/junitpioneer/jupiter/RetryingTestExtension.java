@@ -7,14 +7,12 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import static java.lang.String.format;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +21,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -38,198 +35,100 @@ import org.opentest4j.TestAbortedException;
 
 class RetryingTestExtension implements TestTemplateInvocationContextProvider, TestExecutionExceptionHandler {
 
-	private static final Namespace NAMESPACE = Namespace.create(RetryingTestExtension.class);
+    private static final Namespace NAMESPACE = Namespace.create(RetryingTestExtension.class);
 
-	@Override
-	public boolean supportsTestTemplate(ExtensionContext context) {
-		// the annotation only applies to methods (see its `@Target`),
-		// so it doesn't matter that this method checks meta-annotations
-		return PioneerAnnotationUtils.isAnnotationPresent(context, RetryingTest.class);
-	}
+    @Override
+    public boolean supportsTestTemplate(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-		var retrier = retrierFor(context);
-		return stream(spliteratorUnknownSize(retrier, ORDERED), false);
-	}
+    @Override
+    public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-		// this `context` (M) is a child of the context passed to `provideTestTemplateInvocationContexts` (T),
-		// which means M's store content is invisible to T's store; this can be fixed by using T's store here
-		var templateContext = context
-				.getParent()
-				.orElseThrow(() -> new IllegalStateException(
-					"Extension context \"" + context + "\" should have a parent context."));
-		retrierFor(templateContext).failed(throwable);
-	}
+    @Override
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static FailedTestRetrier retrierFor(ExtensionContext context) {
-		var testMethod = context.getRequiredTestMethod();
-		return context
-				.getStore(NAMESPACE)
-				.computeIfAbsent(testMethod.toString(), __ -> FailedTestRetrier.createFor(testMethod, context),
-					FailedTestRetrier.class);
-	}
+    private static FailedTestRetrier retrierFor(ExtensionContext context) {
+        var testMethod = context.getRequiredTestMethod();
+        return context.getStore(NAMESPACE).computeIfAbsent(testMethod.toString(), __ -> FailedTestRetrier.createFor(testMethod, context), FailedTestRetrier.class);
+    }
 
-	private static class FailedTestRetrier implements Iterator<RetryingTestInvocationContext> {
+    private static class FailedTestRetrier implements Iterator<RetryingTestInvocationContext> {
 
-		private final int maxRetries;
-		private final int minSuccess;
-		private final int suspendForMs;
-		private final Class<? extends Throwable>[] expectedExceptions;
-		private final List<TestAbortedException> seenExceptions;
-		private final TestNameFormatter formatter;
+        private final int maxRetries;
 
-		private int retriesSoFar;
-		private int exceptionsSoFar;
-		private boolean seenFailedAssumption;
-		private boolean seenUnexpectedException;
+        private final int minSuccess;
 
-		private FailedTestRetrier(int maxRetries, int minSuccess, int suspendForMs,
-				Class<? extends Throwable>[] expectedExceptions, TestNameFormatter formatter) {
-			this.maxRetries = maxRetries;
-			this.minSuccess = minSuccess;
-			this.suspendForMs = suspendForMs;
-			this.expectedExceptions = expectedExceptions;
-			this.seenExceptions = new ArrayList<>();
-			this.retriesSoFar = 0;
-			this.exceptionsSoFar = 0;
-			this.formatter = formatter;
-		}
+        private final int suspendForMs;
 
-		static FailedTestRetrier createFor(Method test, ExtensionContext context) {
-			var retryingTest = AnnotationSupport
-					.findAnnotation(test, RetryingTest.class)
-					.orElseThrow(() -> new IllegalStateException("@RetryingTest is missing."));
+        private final Class<? extends Throwable>[] expectedExceptions;
 
-			int maxAttempts = retryingTest.maxAttempts() != 0 ? retryingTest.maxAttempts() : retryingTest.value();
-			int minSuccess = retryingTest.minSuccess();
-			var pattern = retryingTest.name();
+        private final List<TestAbortedException> seenExceptions;
 
-			if (maxAttempts == 0)
-				throw new ExtensionConfigurationException(
-					"@RetryingTest requires that one of `value` or `maxAttempts` be set.");
-			if (retryingTest.value() != 0 && retryingTest.maxAttempts() != 0)
-				throw new ExtensionConfigurationException(
-					"@RetryingTest requires that one of `value` or `maxAttempts` be set, but not both.");
+        private final TestNameFormatter formatter;
 
-			if (minSuccess < 1)
-				throw new ExtensionConfigurationException(
-					"@RetryingTest requires that `minSuccess` be greater than or equal to 1.");
-			else if (maxAttempts <= minSuccess) {
-				var additionalMessage = maxAttempts == minSuccess
-						? " Using @RepeatedTest is recommended as a replacement."
-						: "";
-				throw new ExtensionConfigurationException(
-					format("@RetryingTest requires that `maxAttempts` be greater than %s.%s",
-						minSuccess == 1 ? "1" : "`minSuccess`", additionalMessage));
-			}
-			if (pattern.isEmpty())
-				throw new ExtensionConfigurationException("RetryingTest can not have an empty display name.");
-			var displayName = context.getDisplayName();
-			var formatter = new TestNameFormatter(pattern, displayName, RetryingTest.class);
+        private int retriesSoFar;
 
-			if (retryingTest.suspendForMs() < 0) {
-				throw new ExtensionConfigurationException(
-					"@RetryingTest requires that `suspendForMs` be greater than or equal to 0.");
-			}
+        private int exceptionsSoFar;
 
-			return new FailedTestRetrier(maxAttempts, minSuccess, retryingTest.suspendForMs(),
-				retryingTest.onExceptions(), formatter);
-		}
+        private boolean seenFailedAssumption;
 
-		<E extends Throwable> void failed(E exception) throws E {
-			exceptionsSoFar++;
+        private boolean seenUnexpectedException;
 
-			if (exception instanceof TestAbortedException) {
-				seenFailedAssumption = true;
-				throw new TestAbortedException("Test execution was skipped, possibly because of a failed assumption.",
-					exception);
-			}
+        private FailedTestRetrier(int maxRetries, int minSuccess, int suspendForMs, Class<? extends Throwable>[] expectedExceptions, TestNameFormatter formatter) {
+            this.maxRetries = maxRetries;
+            this.minSuccess = minSuccess;
+            this.suspendForMs = suspendForMs;
+            this.expectedExceptions = expectedExceptions;
+            this.seenExceptions = new ArrayList<>();
+            this.retriesSoFar = 0;
+            this.exceptionsSoFar = 0;
+            this.formatter = formatter;
+        }
 
-			if (!expectedException(exception)) {
-				seenUnexpectedException = true;
-				throw exception;
-			}
+        static FailedTestRetrier createFor(Method test, ExtensionContext context) {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-			if (hasNext()) {
-				// put the original exception's message first, so tools can parse it correctly
-				// and include the test execution number, to make it easier to correlate the
-				// failure with a specific execution
-				var testAbortedException = new TestAbortedException(
-					format("%s%nTest execution #%d (of up to %d) failed ~> will retry in %d ms...",
-						exception.getMessage(), retriesSoFar, maxRetries, suspendForMs),
-					exception);
-				seenExceptions.add(testAbortedException);
-				throw testAbortedException;
-			} else {
-				var testAbortedException = new TestAbortedException(
-					format("%s%nTest execution #%d (of up to %d) failed ~> will not retry any more",
-						exception.getMessage(), retriesSoFar, maxRetries),
-					exception);
-				seenExceptions.add(testAbortedException);
-				throw new MultipleFailuresError(format(
-					"Test execution #%d (of up to %d with at least %d successes) failed ~> test fails - see cause for details",
-					retriesSoFar, maxRetries, minSuccess), seenExceptions);
-			}
-		}
+        <E extends Throwable> void failed(E exception) throws E {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		private boolean expectedException(Throwable exception) {
-			// if not expected exceptions were specified, all are expected
-			if (expectedExceptions.length == 0)
-				return true;
+        private boolean expectedException(Throwable exception) {
+            // if not expected exceptions were specified, all are expected
+            if (expectedExceptions.length == 0)
+                return true;
+            return Arrays.stream(expectedExceptions).anyMatch(type -> type.isInstance(exception));
+        }
 
-			return Arrays.stream(expectedExceptions).anyMatch(type -> type.isInstance(exception));
-		}
+        private void suspendFor(int millis) {
+            if (millis < 1) {
+                return;
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(millis);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Thread interrupted during retry suspension.", ex);
+            }
+        }
 
-		private void suspendFor(int millis) {
-			if (millis < 1) {
-				return;
-			}
+        private boolean isFirstExecution() {
+            return retriesSoFar == 0;
+        }
 
-			try {
-				TimeUnit.MILLISECONDS.sleep(millis);
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-				throw new IllegalStateException("Thread interrupted during retry suspension.", ex);
-			}
-		}
+        @Override
+        public boolean hasNext() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-		private boolean isFirstExecution() {
-			return retriesSoFar == 0;
-		}
-
-		@Override
-		public boolean hasNext() {
-			// there's always at least one execution
-			if (isFirstExecution())
-				return true;
-			if (seenFailedAssumption || seenUnexpectedException)
-				return false;
-
-			int successfulExecutionCount = retriesSoFar - exceptionsSoFar;
-			int remainingExecutionCount = maxRetries - retriesSoFar;
-			int requiredSuccessCount = minSuccess - successfulExecutionCount;
-
-			return remainingExecutionCount >= requiredSuccessCount && requiredSuccessCount > 0;
-		}
-
-		@Override
-		public RetryingTestInvocationContext next() {
-			if (!hasNext())
-				throw new NoSuchElementException();
-
-			if (!isFirstExecution()) {
-				suspendFor(suspendForMs);
-			}
-
-			retriesSoFar++;
-
-			return new RetryingTestInvocationContext(formatter);
-		}
-
-	}
-
+        @Override
+        public RetryingTestInvocationContext next() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

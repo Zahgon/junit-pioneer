@@ -7,12 +7,10 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.internal;
 
 import java.util.Collection;
 import java.util.function.Supplier;
-
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -21,78 +19,67 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 public class PioneerPreconditions {
 
-	private PioneerPreconditions() {
-		// private constructor to prevent instantiation of utility class
-	}
+    private PioneerPreconditions() {
+        // private constructor to prevent instantiation of utility class
+    }
 
-	/**
-	 * Asserts that the supplied string is not blank.
-	 * @param str the string to check
-	 * @param message the precondition violation message
-	 * @return the supplied string
-	 */
-	public static String notBlank(String str, String message) {
-		return notBlank(str, () -> message);
-	}
+    /**
+     * Asserts that the supplied string is not blank.
+     * @param str the string to check
+     * @param message the precondition violation message
+     * @return the supplied string
+     */
+    public static String notBlank(String str, String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Asserts that the supplied string is not blank.
-	 * @param str the string to check
-	 * @param messageSupplier the precondition violation message supplier
-	 * @return the supplied string
-	 */
-	public static String notBlank(String str, Supplier<String> messageSupplier) {
-		if (str == null || str.isBlank()) {
-			throw new PreconditionViolationException(messageSupplier.get());
-		}
+    /**
+     * Asserts that the supplied string is not blank.
+     * @param str the string to check
+     * @param messageSupplier the precondition violation message supplier
+     * @return the supplied string
+     */
+    public static String notBlank(String str, Supplier<String> messageSupplier) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		return str;
-	}
+    /**
+     * Asserts that the supplied object is not null.
+     * @param object the object to check
+     * @param message the precondition violation message
+     * @return the supplied object
+     */
+    public static <T> T notNull(T object, String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Asserts that the supplied object is not null.
-	 * @param object the object to check
-	 * @param message the precondition violation message
-	 * @return the supplied object
-	 */
-	public static <T> T notNull(T object, String message) {
-		return notNull(object, () -> message);
-	}
+    /**
+     * Asserts that the supplied object is not null.
+     * @param object the object to check
+     * @param messageSupplier the precondition violation message supplier
+     * @return the supplied object
+     */
+    public static <T> T notNull(T object, Supplier<String> messageSupplier) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Asserts that the supplied object is not null.
-	 * @param object the object to check
-	 * @param messageSupplier the precondition violation message supplier
-	 * @return the supplied object
-	 */
-	public static <T> T notNull(T object, Supplier<String> messageSupplier) {
-		if (object == null) {
-			throw new PreconditionViolationException(messageSupplier.get());
-		}
-		return object;
-	}
+    /**
+     * Asserts that the supplied collection is not empty.
+     * @param collection the collection to check
+     * @param message the precondition violation message
+     * @return the supplied string
+     */
+    public static <T extends Collection<?>> T notEmpty(T collection, String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Asserts that the supplied collection is not empty.
-	 * @param collection the collection to check
-	 * @param message the precondition violation message
-	 * @return the supplied string
-	 */
-	public static <T extends Collection<?>> T notEmpty(T collection, String message) {
-		return notEmpty(collection, () -> message);
-	}
-
-	/**
-	 * Asserts that the supplied collection is not empty.
-	 * @param collection the collection to check
-	 * @param messageSupplier the precondition violation message supplier
-	 * @return the supplied string
-	 */
-	public static <T extends Collection<?>> T notEmpty(T collection, Supplier<String> messageSupplier) {
-		if (collection == null || collection.isEmpty()) {
-			throw new PreconditionViolationException(messageSupplier.get());
-		}
-		return collection;
-	}
-
+    /**
+     * Asserts that the supplied collection is not empty.
+     * @param collection the collection to check
+     * @param messageSupplier the precondition violation message supplier
+     * @return the supplied string
+     */
+    public static <T extends Collection<?>> T notEmpty(T collection, Supplier<String> messageSupplier) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

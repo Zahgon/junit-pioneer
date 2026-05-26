@@ -7,7 +7,6 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import java.io.IOException;
@@ -24,54 +23,48 @@ import java.util.Arrays;
  */
 public class StdIn extends InputStream {
 
-	private final StringReader reader;
-	private final StringWriter writer = new StringWriter();
+    private final StringReader reader;
 
-	/**
-	 * Keeps track of number of bytes that are still available to {@link InputStream#read() read()}.
-	 */
-	private int availableBytes;
+    private final StringWriter writer = new StringWriter();
 
-	public StdIn(String[] lines) {
-		// console input is always newline-terminated, so append a line separator to every line
-		var mockedInput = String.join(StdIoExtension.SEPARATOR, lines) + StdIoExtension.SEPARATOR;
-		reader = new StringReader(mockedInput);
-		availableBytes = mockedInput.getBytes().length;
-	}
+    /**
+     * Keeps track of number of bytes that are still available to {@link InputStream#read() read()}.
+     */
+    private int availableBytes;
 
-	@Override
-	public int available() throws IOException {
-		return availableBytes;
-	}
+    public StdIn(String[] lines) {
+        // console input is always newline-terminated, so append a line separator to every line
+        var mockedInput = String.join(StdIoExtension.SEPARATOR, lines) + StdIoExtension.SEPARATOR;
+        reader = new StringReader(mockedInput);
+        availableBytes = mockedInput.getBytes().length;
+    }
 
-	@Override
-	public int read() throws IOException {
-		int reading = reader.read();
-		if (reading != -1) {
-			availableBytes--;
-			writer.write(reading);
-		}
-		return reading;
-	}
+    @Override
+    public int available() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int read(byte[] b, int off, int len) throws IOException { // NOSONAR - this is fine for a simple testing extension
-		return super.read(b, off, len);
-	}
+    @Override
+    public int read() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * @return the string that was read from {@code System.in}; note that buffering readers may read all lines eagerly
-	 */
-	public String capturedString() {
-		return writer.toString();
-	}
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * @return the lines that were read from {@code System.in}; note that buffering readers may read all lines eagerly
-	 */
-	public String[] capturedLines() {
-		var lines = writer.toString().split(StdIoExtension.SEPARATOR, -1);
-		return lines[lines.length - 1].isEmpty() ? Arrays.copyOf(lines, lines.length - 1) : lines;
-	}
+    /**
+     * @return the string that was read from {@code System.in}; note that buffering readers may read all lines eagerly
+     */
+    public String capturedString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    /**
+     * @return the lines that were read from {@code System.in}; note that buffering readers may read all lines eagerly
+     */
+    public String[] capturedLines() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

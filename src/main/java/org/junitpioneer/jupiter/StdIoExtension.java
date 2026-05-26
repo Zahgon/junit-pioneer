@@ -7,15 +7,12 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import static java.lang.String.format;
 import static org.junitpioneer.internal.PioneerAnnotationUtils.findClosestEnclosingAnnotation;
-
 import java.io.InputStream;
 import java.io.PrintStream;
-
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -27,120 +24,81 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 class StdIoExtension implements ParameterResolver, BeforeEachCallback, AfterEachCallback {
 
-	static final String SEPARATOR = System.getProperty("line.separator");
+    static final String SEPARATOR = System.getProperty("line.separator");
 
-	private static final Namespace NAMESPACE = Namespace.create(StdIoExtension.class);
+    private static final Namespace NAMESPACE = Namespace.create(StdIoExtension.class);
 
-	private static final String SYSTEM_IN_KEY = "StdIo_System_In";
-	private static final String SYSTEM_OUT_KEY = "StdIo_System_Out";
-	private static final String SYSTEM_ERR_KEY = "StdIo_System_Err";
-	private static final String STD_IN_KEY = "StdIo_Std_In";
+    private static final String SYSTEM_IN_KEY = "StdIo_System_In";
 
-	@Override
-	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		Class<?> type = parameterContext.getParameter().getType();
-		return (type == StdIn.class || type == StdOut.class || type == StdErr.class);
-	}
+    private static final String SYSTEM_OUT_KEY = "StdIo_System_Out";
 
-	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		Class<?> parameterType = parameterContext.getParameter().getType();
-		if (parameterType == StdOut.class)
-			return prepareStdOut(extensionContext);
-		if (parameterType == StdErr.class)
-			return prepareStdErr(extensionContext);
-		if (parameterType == StdIn.class) {
-			String[] source = extensionContext.getRequiredTestMethod().getAnnotation(StdIo.class).value();
-			if (source.length == 0)
-				throw new ExtensionConfigurationException(
-					"@StdIo defined no input, so System.in is still in place and no StdIn parameter can be provided. "
-							+ "If you want to define empty input, use `@StdIo(\"\")`.");
-			else
-				//@formatter:off
-				return extensionContext
-						.getStore(NAMESPACE)
-						.computeIfAbsent(
-								STD_IN_KEY,
-								__ -> createSwapStoreStdIn(extensionContext, source),
-								StdIn.class);
-				//@formatter:on
-		}
-		throw new ParameterResolutionException(format("Could not resolve parameter of type %s.", parameterType));
-	}
+    private static final String SYSTEM_ERR_KEY = "StdIo_System_Err";
 
-	private StdOut prepareStdOut(ExtensionContext context) {
-		storeStdOut(context);
-		return createOut();
-	}
+    private static final String STD_IN_KEY = "StdIo_Std_In";
 
-	private void storeStdOut(ExtensionContext context) {
-		context.getStore(NAMESPACE).put(SYSTEM_OUT_KEY, System.out); //NOSONAR never writing to System.out, only storing it
-	}
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private StdOut createOut() {
-		StdOut out = new StdOut();
-		System.setOut(new PrintStream(out));
-		return out;
-	}
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private StdIn createSwapStoreStdIn(ExtensionContext context, String[] source) {
-		StdIn newStdIn = new StdIn(source);
-		swapAndStoreIn(context, newStdIn);
-		return newStdIn;
-	}
+    private StdOut prepareStdOut(ExtensionContext context) {
+        storeStdOut(context);
+        return createOut();
+    }
 
-	private void swapAndStoreIn(ExtensionContext context, StdIn stdIn) {
-		context.getStore(NAMESPACE).put(SYSTEM_IN_KEY, System.in); //NOSONAR never reading from System.in, only storing it
-		context.getStore(NAMESPACE).put(STD_IN_KEY, stdIn);
-		System.setIn(stdIn); //NOSONAR required to redirect output
-	}
+    private void storeStdOut(ExtensionContext context) {
+        //NOSONAR never writing to System.out, only storing it
+        context.getStore(NAMESPACE).put(SYSTEM_OUT_KEY, System.out);
+    }
 
-	private StdErr prepareStdErr(ExtensionContext context) {
-		storeStdErr(context);
-		return createErr();
-	}
+    private StdOut createOut() {
+        StdOut out = new StdOut();
+        System.setOut(new PrintStream(out));
+        return out;
+    }
 
-	private void storeStdErr(ExtensionContext context) {
-		context.getStore(NAMESPACE).put(SYSTEM_ERR_KEY, System.err); //NOSONAR never writing to System.err, only storing it
-	}
+    private StdIn createSwapStoreStdIn(ExtensionContext context, String[] source) {
+        StdIn newStdIn = new StdIn(source);
+        swapAndStoreIn(context, newStdIn);
+        return newStdIn;
+    }
 
-	private StdErr createErr() {
-		StdErr err = new StdErr();
-		System.setErr(new PrintStream(err));
-		return err;
-	}
+    private void swapAndStoreIn(ExtensionContext context, StdIn stdIn) {
+        //NOSONAR never reading from System.in, only storing it
+        context.getStore(NAMESPACE).put(SYSTEM_IN_KEY, System.in);
+        context.getStore(NAMESPACE).put(STD_IN_KEY, stdIn);
+        //NOSONAR required to redirect output
+        System.setIn(stdIn);
+    }
 
-	@Override
-	public void beforeEach(ExtensionContext context) {
-		String[] source = findClosestEnclosingAnnotation(context, StdIo.class)
-				.orElseThrow(() -> new ExtensionConfigurationException(
-					format("StdIoExtension is active but no %s annotation was found.", StdIo.class.getName())))
-				.value();
-		boolean testMethodIsParameterless = context.getRequiredTestMethod().getParameterCount() == 0;
-		if (source.length == 0 && testMethodIsParameterless)
-			throw new ExtensionConfigurationException(
-				"StdIoExtension is active but neither System.out or System.in are getting redirected.");
+    private StdErr prepareStdErr(ExtensionContext context) {
+        storeStdErr(context);
+        return createErr();
+    }
 
-		boolean stdInStillInPlace = context.getStore(NAMESPACE).get(STD_IN_KEY) == null;
-		if (source.length > 0 && stdInStillInPlace)
-			createSwapStoreStdIn(context, source);
-	}
+    private void storeStdErr(ExtensionContext context) {
+        //NOSONAR never writing to System.err, only storing it
+        context.getStore(NAMESPACE).put(SYSTEM_ERR_KEY, System.err);
+    }
 
-	@Override
-	public void afterEach(ExtensionContext context) {
-		// only reset those streams that were actually stored in "before"
+    private StdErr createErr() {
+        StdErr err = new StdErr();
+        System.setErr(new PrintStream(err));
+        return err;
+    }
 
-		InputStream storedSystemIn = context.getStore(NAMESPACE).get(SYSTEM_IN_KEY, InputStream.class);
-		if (storedSystemIn != null)
-			System.setIn(storedSystemIn); //NOSONAR resetting input
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		PrintStream storedSystemOut = context.getStore(NAMESPACE).get(SYSTEM_OUT_KEY, PrintStream.class);
-		if (storedSystemOut != null)
-			System.setOut(storedSystemOut); //NOSONAR resetting input
-
-		PrintStream storedSystemErr = context.getStore(NAMESPACE).get(SYSTEM_ERR_KEY, PrintStream.class);
-		if (storedSystemErr != null)
-			System.setErr(storedSystemErr); //NOSONAR resetting input
-	}
-
+    @Override
+    public void afterEach(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

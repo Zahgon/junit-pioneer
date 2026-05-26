@@ -7,15 +7,12 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.json;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
-
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Stream;
-
 import org.junitpioneer.internal.PioneerPreconditions;
 
 /**
@@ -23,24 +20,18 @@ import org.junitpioneer.internal.PioneerPreconditions;
  */
 class JsonClasspathSourceArgumentsProvider extends AbstractJsonSourceBasedArgumentsProvider<JsonClasspathSource> {
 
-	// the reading of the resources / files is heavily inspired by Jupiter's CsvFileArgumentsProvider
+    // the reading of the resources / files is heavily inspired by Jupiter's CsvFileArgumentsProvider
+    @Override
+    public void accept(JsonClasspathSource jsonSource) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void accept(JsonClasspathSource jsonSource) {
-		Stream<Source> resources = Arrays
-				.stream(jsonSource.value())
-				.map(JsonClasspathSourceArgumentsProvider::classpathResource);
-
-		accept(resources.collect(toUnmodifiableList()), jsonSource.data());
-	}
-
-	private static Source classpathResource(String resource) {
-		return context -> {
-			PioneerPreconditions.notBlank(resource, "Classpath resource must not be null or blank");
-			InputStream stream = context.getRequiredTestClass().getClassLoader().getResourceAsStream(resource);
-			PioneerPreconditions.notNull(stream, "Classpath resource [" + resource + "] does not exist");
-			return stream;
-		};
-	}
-
+    private static Source classpathResource(String resource) {
+        return context -> {
+            PioneerPreconditions.notBlank(resource, "Classpath resource must not be null or blank");
+            InputStream stream = context.getRequiredTestClass().getClassLoader().getResourceAsStream(resource);
+            PioneerPreconditions.notNull(stream, "Classpath resource [" + resource + "] does not exist");
+            return stream;
+        };
+    }
 }

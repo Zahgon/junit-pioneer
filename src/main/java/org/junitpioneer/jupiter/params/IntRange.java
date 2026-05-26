@@ -7,18 +7,16 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.params;
 
 class IntRange extends Range<Integer> {
 
-	public IntRange(IntRangeSource source) {
-		super(source.from(), source.to(), source.step(), source.closed(), 0);
-	}
+    public IntRange(IntRangeSource source) {
+        super(source.from(), source.to(), source.step(), source.closed(), 0);
+    }
 
-	@Override
-	public Integer nextValue() {
-		return getCurrent() + getStep();
-	}
-
+    @Override
+    public Integer nextValue() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

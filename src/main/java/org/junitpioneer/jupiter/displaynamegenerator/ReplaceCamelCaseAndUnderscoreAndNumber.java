@@ -7,13 +7,11 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter.displaynamegenerator;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayNameGenerator;
 
 /**
@@ -47,46 +45,40 @@ import org.junit.jupiter.api.DisplayNameGenerator;
  */
 public class ReplaceCamelCaseAndUnderscoreAndNumber extends DisplayNameGenerator.Standard {
 
-	public static final DisplayNameGenerator INSTANCE = new ReplaceCamelCaseAndUnderscoreAndNumber();
+    public static final DisplayNameGenerator INSTANCE = new ReplaceCamelCaseAndUnderscoreAndNumber();
 
-	private ReplaceCamelCaseAndUnderscoreAndNumber() {
-	}
+    private ReplaceCamelCaseAndUnderscoreAndNumber() {
+    }
 
-	@Override
-	public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
-			Method testMethod) {
-		if (hasParameters(testMethod)) {
-			return replaceCamelCaseAndUnderscoreAndNumber(testMethod.getName()) + " "
-					+ DisplayNameGenerator.parameterTypesAsString(testMethod);
-		}
-		return replaceCamelCaseAndUnderscoreAndNumber(testMethod.getName());
-	}
+    @Override
+    public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private String replaceCamelCaseAndUnderscoreAndNumber(String input) {
-		// Remove leading underscore(s)
-		var sanitized = input.replaceAll("^_+(.*)$", "$1");
-		List<String> list = new ArrayList<>();
-		String[] split = sanitized.split("_");
-		for (int i = 0; i < split.length; i++) {
-			if (i % 2 == 1) {
-				// If parity is odd, we are between two underscores, no formatting necessary
-				list.add(split[i]);
-			} else {
-				list.add(formatCamelCase(split[i]));
-			}
-		}
-		// Some cases can lead to double spaces - i.e.: underscore (closing) followed by capital letter
-		var joined = String.join(" ", list).replaceAll("\\s{2}", " ");
-		// Capitalize the first letter
-		return joined.substring(0, 1).toUpperCase() + joined.substring(1);
-	}
+    private String replaceCamelCaseAndUnderscoreAndNumber(String input) {
+        // Remove leading underscore(s)
+        var sanitized = input.replaceAll("^_+(.*)$", "$1");
+        List<String> list = new ArrayList<>();
+        String[] split = sanitized.split("_");
+        for (int i = 0; i < split.length; i++) {
+            if (i % 2 == 1) {
+                // If parity is odd, we are between two underscores, no formatting necessary
+                list.add(split[i]);
+            } else {
+                list.add(formatCamelCase(split[i]));
+            }
+        }
+        // Some cases can lead to double spaces - i.e.: underscore (closing) followed by capital letter
+        var joined = String.join(" ", list).replaceAll("\\s{2}", " ");
+        // Capitalize the first letter
+        return joined.substring(0, 1).toUpperCase() + joined.substring(1);
+    }
 
-	private String formatCamelCase(String in) {
-		return in.replaceAll("(\\d+)", " $1").replaceAll("([A-Z]+)", " $1").toLowerCase();
-	}
+    private String formatCamelCase(String in) {
+        return in.replaceAll("(\\d+)", " $1").replaceAll("([A-Z]+)", " $1").toLowerCase();
+    }
 
-	private boolean hasParameters(Method method) {
-		return method.getParameterCount() > 0;
-	}
-
+    private boolean hasParameters(Method method) {
+        return method.getParameterCount() > 0;
+    }
 }

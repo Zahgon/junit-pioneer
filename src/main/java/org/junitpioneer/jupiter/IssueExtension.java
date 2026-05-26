@@ -7,11 +7,9 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 package org.junitpioneer.jupiter;
 
 import static org.junitpioneer.jupiter.issue.IssueExtensionExecutionListener.REPORT_ENTRY_KEY;
-
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junitpioneer.internal.PioneerAnnotationUtils;
@@ -23,12 +21,8 @@ import org.junitpioneer.internal.PioneerAnnotationUtils;
  */
 class IssueExtension implements BeforeEachCallback {
 
-	@Override
-	public void beforeEach(ExtensionContext context) {
-		PioneerAnnotationUtils.findClosestEnclosingAnnotation(context, Issue.class).ifPresent(annotation -> {
-			String issueId = annotation.value();
-			context.publishReportEntry(REPORT_ENTRY_KEY, issueId);
-		});
-	}
-
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }
